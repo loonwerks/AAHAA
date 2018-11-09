@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="5">
+  <element id="0" manual="true">
+    <element id="9">
+      <bo>
+        <seg>classifier</seg>
+        <seg>cross_track_and_control</seg>
+      </bo>
+      <position x="100.0" y="226.0"/>
+      <size width="230.0" height="35.0"/>
+      <contentFilters>
+        <filter>generalizations</filter>
+      </contentFilters>
+    </element>
+    <element id="2">
+      <bo>
+        <seg>classifier</seg>
+        <seg>data_analysis</seg>
+      </bo>
+      <position x="100.0" y="85.0"/>
+      <size width="148.0" height="35.0"/>
+      <contentFilters>
+        <filter>generalizations</filter>
+      </contentFilters>
+    </element>
+    <element id="1">
+      <bo>
+        <seg>classifier</seg>
+        <seg>deep_taxi</seg>
+      </bo>
+      <position x="280.0" y="273.0"/>
+      <size width="123.0" height="35.0"/>
+      <contentFilters>
+        <filter>generalizations</filter>
+      </contentFilters>
+    </element>
+    <element id="6">
+      <element id="7">
+        <bo>
+          <seg>realization</seg>
+        </bo>
+        <bendpoints>
+          <point x="276.0" y="302.5"/>
+          <point x="288.0" y="302.5"/>
+        </bendpoints>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>classifier</seg>
+        <seg>deep_taxi.impl</seg>
+      </bo>
+      <position x="100.0" y="273.0"/>
+      <size width="160.0" height="35.0"/>
+      <contentFilters>
+        <filter>generalizations</filter>
+      </contentFilters>
+    </element>
+    <element id="10">
+      <bo>
+        <seg>classifier</seg>
+        <seg>deep_taxi_cnn</seg>
+      </bo>
+      <position x="100.0" y="179.0"/>
+      <size width="162.0" height="35.0"/>
+      <contentFilters>
+        <filter>generalizations</filter>
+      </contentFilters>
+    </element>
+    <element id="4">
+      <bo>
+        <seg>classifier</seg>
+        <seg>dsp_smoother</seg>
+      </bo>
+      <position x="100.0" y="132.0"/>
+      <size width="156.0" height="35.0"/>
+      <contentFilters>
+        <filter>generalizations</filter>
+      </contentFilters>
+    </element>
+    <element id="11">
+      <bo>
+        <seg>classifier</seg>
+        <seg>guidance</seg>
+      </bo>
+      <position x="221.0" y="38.0"/>
+      <size width="121.0" height="35.0"/>
+      <contentFilters>
+        <filter>generalizations</filter>
+      </contentFilters>
+    </element>
+    <element id="3">
+      <bo>
+        <seg>classifier</seg>
+        <seg>ros_to_json</seg>
+      </bo>
+      <position x="260.0" y="85.0"/>
+      <size width="153.0" height="35.0"/>
+      <contentFilters>
+        <filter>generalizations</filter>
+      </contentFilters>
+    </element>
+    <element id="5">
+      <bo>
+        <seg>classifier</seg>
+        <seg>rosbag_player</seg>
+      </bo>
+      <position x="268.0" y="132.0"/>
+      <size width="160.0" height="35.0"/>
+      <contentFilters>
+        <filter>generalizations</filter>
+      </contentFilters>
+    </element>
+    <element id="8">
+      <bo>
+        <seg>classifier</seg>
+        <seg>web_ui</seg>
+      </bo>
+      <position x="100.0" y="38.0"/>
+      <size width="109.0" height="35.0"/>
+      <contentFilters>
+        <filter>generalizations</filter>
+      </contentFilters>
+    </element>
+    <bo>
+      <seg>package</seg>
+      <seg>deep_taxi</seg>
+    </bo>
+    <position x="12.0" y="12.0"/>
+    <size width="440.0" height="320.0"/>
+    <contentFilters>
+      <filter>classifiers</filter>
+    </contentFilters>
+  </element>
+  <config type="package" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>package</seg>
+      <seg>deep_taxi</seg>
+    </context>
+  </config>
+</diagram:Diagram>

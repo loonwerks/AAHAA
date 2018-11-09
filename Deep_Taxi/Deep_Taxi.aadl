@@ -1,0 +1,150 @@
+package Deep_Taxi
+public
+	
+	system Camera
+		features
+			Video: out event data port;
+	end Camera;
+	
+	system implementation Camera.Impl
+		
+	end Camera.Impl;
+	
+	
+	system IRS
+		features
+			Heading: out event data port;
+	end IRS;
+	
+	system implementation IRS.Impl
+		
+	end IRS.Impl;
+	
+	
+	system Deep_Taxi_CNN
+		features
+			Video: in event data port;
+			Raw_CTE: out event data port;
+			Raw_Heading: out event data port;
+	end Deep_Taxi_CNN;
+	
+	system implementation Deep_Taxi_CNN.Impl
+		
+	end Deep_Taxi_CNN.Impl;
+
+	
+	system DSP_Smoother
+		features
+			Raw_CTE: in event data port;
+			Raw_Heading: in event data port;
+			Smoothed_CTE: out event data port;
+			Smoothed_Heading: out event data port;
+	end DSP_Smoother;
+	
+	system implementation DSP_Smoother.Impl
+		
+	end DSP_Smoother.Impl;
+	
+	
+	system Monitor
+		features
+			Actual_Heading: in event data port;
+			Computed_Heading: in event data port;
+			Computed_CTE: in event data port;
+			Alert: out event port;
+	end Monitor;
+	
+	system implementation Monitor.Impl
+		
+	end Monitor.Impl;
+	
+	
+	system Controller
+		features
+			CTE: in event data port;
+			Heading: in event data port;
+			Yaw_Command: out event data port;
+	end Controller;
+	
+	system implementation Controller.Impl
+		
+	end Controller.Impl;
+	
+	
+	system Simplex
+		features
+			Safe_Command: out event data port;
+	end Simplex;
+	
+	system implementation Simplex.Impl
+		
+	end Simplex.Impl;
+	
+	
+	system Switch
+		features
+			Safety_Trigger: in event port;
+			Control_Command: in event data port;
+			Safe_Command: in event data port;
+			Command: out event data port;
+	end Switch;
+	
+	system implementation Switch.Impl
+		
+	end Switch.Impl;
+	
+	
+	system Alert
+		features
+			Alert: in event port;
+	end Alert;
+	
+	system implementation Alert.Impl
+		
+	end Alert.Impl;
+	
+	
+	system Aircraft_Control
+		features
+			Command: in event data port;
+	end Aircraft_Control;
+	
+	system implementation Aircraft_Control.Impl
+		
+	end Aircraft_Control.Impl;
+	
+	
+	system Deep_Taxi
+		
+	end Deep_Taxi;
+	
+	system implementation Deep_Taxi.Impl
+		subcomponents
+			IRS: system IRS.Impl;
+			CAM: system Camera.Impl;
+			CNN: system Deep_Taxi_CNN.Impl;
+			DSP: system DSP_Smoother.Impl;
+			CTL: system Controller.Impl;
+			SAFE: system Simplex.Impl;
+			SWITCH: system Switch.Impl;
+			MON: system Monitor.Impl;
+			ALERT: system Alert.Impl;
+			AC: system Aircraft_Control.Impl;
+		connections
+			c1: port IRS.Heading -> MON.Actual_Heading;
+			c2: port CAM.Video -> CNN.Video;
+			c3: port CNN.Raw_CTE -> DSP.Raw_CTE;
+			c4: port CNN.Raw_Heading -> DSP.Raw_Heading;
+			c5: port DSP.Smoothed_CTE -> MON.Computed_CTE;
+			c6: port DSP.Smoothed_Heading -> MON.Computed_Heading;
+			c7: port DSP.Smoothed_CTE -> CTL.CTE;
+			c8: port DSP.Smoothed_Heading -> CTL.Heading;
+			c9: port CTL.Yaw_Command -> SWITCH.Control_Command;
+			c10: port SAFE.Safe_Command -> SWITCH.Safe_Command;
+			c11: port MON.Alert -> SWITCH.Safety_Trigger;
+			c12: port MON.Alert -> ALERT.Alert;
+			c13: port SWITCH.Command -> AC.Command;
+	end Deep_Taxi.Impl;
+		
+	
+end Deep_Taxi;
