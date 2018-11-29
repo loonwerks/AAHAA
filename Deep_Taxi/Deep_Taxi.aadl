@@ -1,6 +1,18 @@
 package Deep_Taxi
 public
 	
+	with Base_Types;
+	
+	data Command
+		
+	end Command;
+	
+	data implementation Command.Impl
+		subcomponents
+			Heading: data Base_Types::Float;
+			Speed: data Base_Types::Integer;
+	end Command.Impl;
+	
 	system Camera
 		features
 			Video: out event data port;
@@ -13,7 +25,8 @@ public
 	
 	system IRS
 		features
-			Heading: out event data port;
+			Heading: out event data port Base_Types::Float;
+			CTE: out event data port Base_Types::Float;
 	end IRS;
 	
 	system implementation IRS.Impl
@@ -24,8 +37,8 @@ public
 	system Deep_Taxi_CNN
 		features
 			Video: in event data port;
-			Raw_CTE: out event data port;
-			Raw_Heading: out event data port;
+			Raw_CTE: out event data port Base_Types::Float;
+			Raw_Heading: out event data port Base_Types::Float;
 	end Deep_Taxi_CNN;
 	
 	system implementation Deep_Taxi_CNN.Impl
@@ -35,10 +48,10 @@ public
 	
 	system DSP_Smoother
 		features
-			Raw_CTE: in event data port;
-			Raw_Heading: in event data port;
-			Smoothed_CTE: out event data port;
-			Smoothed_Heading: out event data port;
+			Raw_CTE: in event data port Base_Types::Float;
+			Raw_Heading: in event data port Base_Types::Float;
+			Smoothed_CTE: out event data port Base_Types::Float;
+			Smoothed_Heading: out event data port Base_Types::Float;
 	end DSP_Smoother;
 	
 	system implementation DSP_Smoother.Impl
@@ -48,11 +61,16 @@ public
 	
 	system Monitor
 		features
-			Actual_Heading: in event data port;
-			Computed_Heading: in event data port;
-			Computed_CTE: in event data port;
-			Alert: out event port;
+			Actual_Heading: in event data port Base_Types::Float;
+			Estimated_Heading: in event data port Base_Types::Float;
+			Actual_CTE: in event data port Base_Types::Float;
+			Estimated_CTE: in event data port Base_Types::Float;
+			Alert: out event data port Base_Types::Boolean;
+		annex agree {**
+			guarantee "Alert when monitor condition deviates" : if MONITOR_CONDITION(Actual_Heading, Estimated_Heading, Actual_CTE, Estimated_CTE) then Alert = false else Alert = true;
+		**};
 	end Monitor;
+	
 	
 	system implementation Monitor.Impl
 		
@@ -61,32 +79,74 @@ public
 	
 	system Controller
 		features
-			CTE: in event data port;
-			Heading: in event data port;
-			Yaw_Command: out event data port;
+			Heading: in event data port Base_Types::Float;
+			CTE: in event data port Base_Types::Float;
+			Control_Command: out event data port Command.Impl;
+		annex agree {**
+--			Controller cannot make any guarantees on command heading because input is coming from DNN.
+--			If we could validate assumptions on input, there wouldn't be a need for this project.
+			guarantee "Speed will always be greater than zero" : Control_Command.Speed > 0;
+		**};
 	end Controller;
+	
 	
 	system implementation Controller.Impl
 		
 	end Controller.Impl;
 	
 	
-	system Simplex
+	system Monitored_Controller
 		features
-			Safe_Command: out event data port;
-	end Simplex;
+			Actual_Heading: in event data port Base_Types::Float;
+			Estimated_Heading: in event data port Base_Types::Float;
+			Actual_CTE: in event data port Base_Types::Float;
+			Estimated_CTE: in event data port Base_Types::Float;
+			Alert: out event data port Base_Types::Boolean;
+			Control_Command: out event data port Command.Impl;
+		annex agree {**
+			guarantee "Command is safe or monitor will send out alert" : SAFE_COMMAND(Actual_Heading, Actual_CTE, Control_Command) or Alert = true;
+			guarantee "Speed will always be greater than zero" : Control_Command.Speed = 1;
+		**};
+	end Monitored_Controller;
 	
-	system implementation Simplex.Impl
+	
+	system implementation Monitored_Controller.Impl
+		subcomponents
+			MON: system Monitor.Impl;
+			CTL: system Controller.Impl;
+		connections
+			c1: port Actual_Heading -> MON.Actual_Heading;
+			c2: port Estimated_Heading -> MON.Estimated_Heading;
+			c3: port Actual_CTE -> MON.Actual_CTE;
+			c4: port Estimated_CTE -> MON.Estimated_CTE;
+			c5: port Estimated_Heading -> CTL.Heading;
+			c6: port Estimated_CTE -> CTL.CTE;
+			c7: port MON.Alert -> Alert;
+			c8: port CTL.Control_Command -> Control_Command;
+	end Monitored_Controller.Impl;
+	
+	system Safety_Controller
+		features
+			Safe_Command: out event data port Command.Impl;
+		annex agree {**
+			guarantee "Safety controller will always bring aircraft to an immediate stop" : Safe_Command.Speed = 0;
+		**};
+	end Safety_Controller;
+	
+	system implementation Safety_Controller.Impl
 		
-	end Simplex.Impl;
+	end Safety_Controller.Impl;
 	
 	
 	system Switch
 		features
-			Safety_Trigger: in event port;
-			Control_Command: in event data port;
-			Safe_Command: in event data port;
-			Command: out event data port;
+			Safety_Trigger: in event data port Base_Types::Boolean;
+			Control_Command: in event data port Command.Impl;
+			Safe_Command: in event data port Command.Impl;
+			Command: out event data port Command.Impl;
+		annex agree {**
+			guarantee "Safety switch functions correctly" : if Safety_Trigger = false then Command = Control_Command else Command = Safe_Command;
+		**};
 	end Switch;
 	
 	system implementation Switch.Impl
@@ -96,7 +156,7 @@ public
 	
 	system Alert
 		features
-			Alert: in event port;
+			Alert: in event data port Base_Types::boolean;
 	end Alert;
 	
 	system implementation Alert.Impl
@@ -104,47 +164,145 @@ public
 	end Alert.Impl;
 	
 	
-	system Aircraft_Control
-		features
-			Command: in event data port;
-	end Aircraft_Control;
-	
-	system implementation Aircraft_Control.Impl
-		
-	end Aircraft_Control.Impl;
-	
-	
 	system Deep_Taxi
-		
+		features
+			IRS_Heading: in event data port Base_Types::Float;
+			IRS_CTE: in event data port Base_Types::Float;
+			CAM_VIDEO: in event data port;
+			Aircraft_Command: out event data port Command.Impl;
+		annex agree {**
+			assume "Aircraft is currently on runway" : IRS_CTE < HALF_RUNWAY_WIDTH;
+			guarantee "Steering command will not cause the aircraft to drive off the runway" : SAFE_COMMAND(IRS_Heading, IRS_CTE, Aircraft_Command);
+		**};
 	end Deep_Taxi;
 	
-	system implementation Deep_Taxi.Impl
+	system implementation Deep_Taxi.Impl2
 		subcomponents
-			IRS: system IRS.Impl;
+--			IRS: system IRS.Impl;
 			CAM: system Camera.Impl;
 			CNN: system Deep_Taxi_CNN.Impl;
 			DSP: system DSP_Smoother.Impl;
-			CTL: system Controller.Impl;
-			SAFE: system Simplex.Impl;
+--			MON: system Monitor.Impl;
+--			CTL: system Controller.Impl;
+			MON_CTL: system Monitored_Controller.Impl;
+			SAFE: system Safety_Controller.Impl;
 			SWITCH: system Switch.Impl;
-			MON: system Monitor.Impl;
 			ALERT: system Alert.Impl;
-			AC: system Aircraft_Control.Impl;
 		connections
-			c1: port IRS.Heading -> MON.Actual_Heading;
-			c2: port CAM.Video -> CNN.Video;
-			c3: port CNN.Raw_CTE -> DSP.Raw_CTE;
-			c4: port CNN.Raw_Heading -> DSP.Raw_Heading;
-			c5: port DSP.Smoothed_CTE -> MON.Computed_CTE;
-			c6: port DSP.Smoothed_Heading -> MON.Computed_Heading;
-			c7: port DSP.Smoothed_CTE -> CTL.CTE;
-			c8: port DSP.Smoothed_Heading -> CTL.Heading;
-			c9: port CTL.Yaw_Command -> SWITCH.Control_Command;
-			c10: port SAFE.Safe_Command -> SWITCH.Safe_Command;
-			c11: port MON.Alert -> SWITCH.Safety_Trigger;
-			c12: port MON.Alert -> ALERT.Alert;
-			c13: port SWITCH.Command -> AC.Command;
+			c1: port IRS_Heading -> MON_CTL.Actual_Heading;
+			c2: port IRS_CTE -> MON_CTL.Actual_CTE;
+			c3: port CAM.Video -> CNN.Video;
+			c4: port CNN.Raw_CTE -> DSP.Raw_CTE;
+			c5: port CNN.Raw_Heading -> DSP.Raw_Heading;
+			c6: port DSP.Smoothed_CTE -> MON_CTL.Estimated_CTE;
+			c7: port DSP.Smoothed_Heading -> MON_CTL.Estimated_Heading;
+--			c8: port DSP.Smoothed_CTE -> MON_CTL.CTE;
+--			c9: port DSP.Smoothed_Heading -> MON_CTL.Heading;
+			c8: port MON_CTL.Control_Command -> SWITCH.Control_Command;
+			c9: port SAFE.Safe_Command -> SWITCH.Safe_Command;
+			c10: port MON_CTL.Alert -> SWITCH.Safety_Trigger;
+			c11: port MON_CTL.Alert -> ALERT.Alert;
+			c12: port SWITCH.Command -> Aircraft_Command;
+			
+			annex agree {**
+				assert "Monitor condition implies safe CTL command" : MONITOR_CONDITION(IRS_Heading, MON_CTL.Estimated_Heading, IRS_CTE, MON_CTL.Estimated_CTE) => SAFE_COMMAND(IRS_Heading, IRS_CTE, MON_CTL.Control_Command);
+			**};
+		
+	end Deep_Taxi.Impl2;
+	
+	system implementation Deep_Taxi.Impl
+		subcomponents
+--			CAM: system Camera.Impl;
+			CNN: system Deep_Taxi_CNN.Impl;
+			Smoother: system DSP_Smoother.Impl;
+			Monitor: system Monitor.Impl;
+			Controller: system Controller.Impl;
+			Safety: system Safety_Controller.Impl;
+			Switch: system Switch.Impl;
+			Alert: system Alert.Impl;
+		connections
+			c1: port IRS_Heading -> Monitor.Actual_Heading;
+			c2: port IRS_CTE -> Monitor.Actual_CTE;
+			c3: port CAM_Video -> CNN.Video;
+			c4: port CNN.Raw_CTE -> Smoother.Raw_CTE;
+			c5: port CNN.Raw_Heading -> Smoother.Raw_Heading;
+			c6: port Smoother.Smoothed_CTE -> Monitor.Estimated_CTE;
+			c7: port Smoother.Smoothed_Heading -> Monitor.Estimated_Heading;
+			c8: port Smoother.Smoothed_CTE -> Controller.CTE;
+			c9: port Smoother.Smoothed_Heading -> Controller.Heading;
+			c10: port Controller.Control_Command -> SWITCH.Control_Command;
+			c11: port Safety.Safe_Command -> Switch.Safe_Command;
+			c12: port Monitor.Alert -> Switch.Safety_Trigger;
+			c13: port Monitor.Alert -> Alert.Alert;
+			c14: port Switch.Command -> Aircraft_Command;
+			
+			annex agree {**
+				assert "Controller always outputs positive speed" : Controller.Control_Command.Speed = 1;
+				assert "Monitor condition implies safe CTL command" : MONITOR_CONDITION(IRS_Heading, Monitor.Estimated_Heading, IRS_CTE, Monitor.Estimated_CTE) => SAFE_COMMAND(IRS_Heading, IRS_CTE, Controller.Control_Command);
+			**};
+		
 	end Deep_Taxi.Impl;
 		
+private
+
+	annex agree {**
+		
+		const HALF_RUNWAY_WIDTH : real = 10.0;
+		const ACCEPTABLE_HEADING_ERROR : real = 5.0;
+		const ACCEPTABLE_CTE_ERROR : real = 1.0;
+		
+		fun SAFE_COMMAND(Heading: real, CTE : real, Cmd : Command.Impl) : bool = 
+			if Cmd.Speed = 0 then true
+			else if Heading + Cmd.Heading >= -90.0 and Heading + Cmd.Heading <= 90.0 then
+				if CTE + LINEAR_SIN(Heading + Cmd.Heading) < HALF_RUNWAY_WIDTH then true
+				else false
+			else false;
+			
+		fun MONITOR_CONDITION(Actual_Heading : real, Estimated_Heading : real, Actual_CTE : real, Estimated_CTE : real) : bool =
+			abs(Actual_Heading - Estimated_Heading) <= ACCEPTABLE_HEADING_ERROR and abs(Actual_CTE - Estimated_CTE) <= ACCEPTABLE_CTE_ERROR;
+	
+		fun abs(num : real) : real = 
+			if num >= 0.0 then num
+			else num * -1.0;
+			
+		fun LINEAR_SIN(theta : real) : real =
+			if theta >= -90.0 and theta < -85.0 then -1.0
+			else if theta >= -85.0 and theta <-80.0 then -0.9962
+			else if theta >= -80.0 and theta <-75.0 then -0.9848
+			else if theta >= -75.0 and theta <-70.0 then -0.9659
+			else if theta >= -70.0 and theta <-65.0 then -0.9397
+			else if theta >= -65.0 and theta <-60.0 then -0.9063
+			else if theta >= -60.0 and theta <-55.0 then -0.8660
+			else if theta >= -55.0 and theta <-50.0 then -0.8192
+			else if theta >= -50.0 and theta <-45.0 then -0.7660
+			else if theta >= -45.0 and theta <-40.0 then -0.7071
+			else if theta >= -40.0 and theta <-35.0 then -0.6428
+			else if theta >= -35.0 and theta <-30.0 then -0.5736
+			else if theta >= -30.0 and theta <-25.0 then -0.5
+			else if theta >= -25.0 and theta <-20.0 then -0.4226
+			else if theta >= -20.0 and theta <-15.0 then -0.3420
+			else if theta >= -15.0 and theta <-10.0 then -0.2588
+			else if theta >= -10.0 and theta <-5.0 then -0.1736
+			else if theta >= -5.0 and theta < 0.0 then -0.0872
+			else if theta = 0.0 then 0.0
+			else if theta > 0.0 and theta <= 5.0 then 0.0872
+			else if theta > 5.0 and theta <= 10.0 then 0.1736
+			else if theta > 10.0 and theta <= 15.0 then 0.2588
+			else if theta > 15.0 and theta <= 20.0 then 0.3420
+			else if theta > 20.0 and theta <= 25.0 then 0.4226
+			else if theta > 25.0 and theta <= 30.0 then 0.5
+			else if theta > 30.0 and theta <= 35.0 then 0.5736
+			else if theta > 35.0 and theta <= 40.0 then 0.6428
+			else if theta > 40.0 and theta <= 45.0 then 0.7071
+			else if theta > 45.0 and theta <= 50.0 then 0.7660
+			else if theta > 50.0 and theta <= 55.0 then 0.8192
+			else if theta > 55.0 and theta <= 60.0 then 0.8660
+			else if theta > 60.0 and theta <= 65.0 then 0.9063
+			else if theta > 65.0 and theta <= 70.0 then 0.9397
+			else if theta > 70.0 and theta <= 75.0 then 0.9659
+			else if theta > 75.0 and theta <= 80.0 then 0.9848
+			else if theta > 80.0 and theta <= 85.0 then 0.9962
+			else 1.0; --if theta > 85.0 and theta <= 90.0
+	**};
 	
 end Deep_Taxi;
