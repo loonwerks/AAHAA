@@ -1,0 +1,5 @@
+property set AAHAA_Properties is
+	Component_Type: enumeration (LEC, MONITOR, SAFETY_CONTROLLER, CONTROLLER, SWITCH) applies to (system, process, thread, device, abstract);
+	Alert_Type: list of enumeration (PILOT, AIRCRAFT, LOG) applies to (system, process, thread, device, abstract);
+	LEC_Location: aadlstring applies to(system, process, thread, device, abstract);
+end AAHAA_Properties;

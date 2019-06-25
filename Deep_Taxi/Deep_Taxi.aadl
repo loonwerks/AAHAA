@@ -2,9 +2,9 @@ package Deep_Taxi
 public
 	
 	with Base_Types;
+	with AAHAA_Properties;
 	
 	data Command
-		
 	end Command;
 	
 	data implementation Command.Impl
@@ -19,7 +19,6 @@ public
 	end Camera;
 	
 	system implementation Camera.Impl
-		
 	end Camera.Impl;
 	
 	
@@ -30,7 +29,6 @@ public
 	end IRS;
 	
 	system implementation IRS.Impl
-		
 	end IRS.Impl;
 	
 	
@@ -39,10 +37,15 @@ public
 			Video: in event data port;
 			Raw_CTE: out event data port Base_Types::Float;
 			Raw_Heading: out event data port Base_Types::Float;
+		properties
+			AAHAA_Properties::Component_Type => LEC;
+		annex resolute {**
+			-- Systems containing LECs must provide specific assurances
+			prove (LEC_Assurance(this))
+		**};
 	end Deep_Taxi_CNN;
 	
 	system implementation Deep_Taxi_CNN.Impl
-		
 	end Deep_Taxi_CNN.Impl;
 
 	
@@ -55,7 +58,6 @@ public
 	end DSP_Smoother;
 	
 	system implementation DSP_Smoother.Impl
-		
 	end DSP_Smoother.Impl;
 	
 	
@@ -66,14 +68,19 @@ public
 			Actual_CTE: in event data port Base_Types::Float;
 			Estimated_CTE: in event data port Base_Types::Float;
 			Alert: out event data port Base_Types::Boolean;
+		properties
+			AAHAA_Properties::Component_Type => MONITOR;
 		annex agree {**
-			guarantee "Alert when monitor condition deviates" : if MONITOR_CONDITION(Actual_Heading, Estimated_Heading, Actual_CTE, Estimated_CTE) then Alert = false else Alert = true;
+			guarantee Monitor_Condition "Alert when monitor condition deviates" : if MONITOR_CONDITION(Actual_Heading, Estimated_Heading, Actual_CTE, Estimated_CTE) then Alert = false else Alert = true;
+		**};
+		annex resolute {**
+			-- provably correct synthesis of high-assurance monitor
+			prove (High_Assurance_Monitor(this, "Monitor_Condition"))
 		**};
 	end Monitor;
 	
 	
 	system implementation Monitor.Impl
-		
 	end Monitor.Impl;
 	
 	
@@ -82,8 +89,10 @@ public
 			Heading: in event data port Base_Types::Float;
 			CTE: in event data port Base_Types::Float;
 			Control_Command: out event data port Command.Impl;
+		properties
+			AAHAA_Properties::Component_Type => CONTROLLER;
 		annex agree {**
---			Controller cannot make any guarantees on command heading because input is coming from DNN.
+--			Controller cannot make any guarantees on command heading because input is coming from the DNN.
 --			If we could validate assumptions on input, there wouldn't be a need for this project.
 			guarantee "Speed will always be greater than zero" : Control_Command.Speed > 0;
 		**};
@@ -91,51 +100,39 @@ public
 	
 	
 	system implementation Controller.Impl
-		
 	end Controller.Impl;
 	
-	
-	system Monitored_Controller
-		features
-			Actual_Heading: in event data port Base_Types::Float;
-			Estimated_Heading: in event data port Base_Types::Float;
-			Actual_CTE: in event data port Base_Types::Float;
-			Estimated_CTE: in event data port Base_Types::Float;
-			Alert: out event data port Base_Types::Boolean;
-			Control_Command: out event data port Command.Impl;
-		annex agree {**
-			guarantee "Command is safe or monitor will send out alert" : SAFE_COMMAND(Actual_Heading, Actual_CTE, Control_Command) or Alert = true;
-			guarantee "Speed will always be greater than zero" : Control_Command.Speed = 1;
-		**};
-	end Monitored_Controller;
-	
-	
-	system implementation Monitored_Controller.Impl
-		subcomponents
-			MON: system Monitor.Impl;
-			CTL: system Controller.Impl;
-		connections
-			c1: port Actual_Heading -> MON.Actual_Heading;
-			c2: port Estimated_Heading -> MON.Estimated_Heading;
-			c3: port Actual_CTE -> MON.Actual_CTE;
-			c4: port Estimated_CTE -> MON.Estimated_CTE;
-			c5: port Estimated_Heading -> CTL.Heading;
-			c6: port Estimated_CTE -> CTL.CTE;
-			c7: port MON.Alert -> Alert;
-			c8: port CTL.Control_Command -> Control_Command;
-	end Monitored_Controller.Impl;
 	
 	system Safety_Controller
 		features
 			Safe_Command: out event data port Command.Impl;
+		properties
+			AAHAA_Properties::Component_Type => SAFETY_CONTROLLER;
 		annex agree {**
-			guarantee "Safety controller will always bring aircraft to an immediate stop" : Safe_Command.Speed = 0;
+			guarantee Safe_Ctrl "Safety controller will always bring aircraft to an immediate stop" : Safe_Command.Speed = 0;
+		**};
+		annex resolute {**
+			-- provably correct synthesis of high-assurance monitor
+			prove (High_Assurance_Controller(this, "Safe_Ctrl"))
 		**};
 	end Safety_Controller;
 	
 	system implementation Safety_Controller.Impl
-		
 	end Safety_Controller.Impl;
+	
+	
+	system Unsafe_Controller
+		features
+			Unsafe_Command: out event data port Command.Impl;
+		properties
+			AAHAA_Properties::Component_Type => CONTROLLER;
+		annex agree {**
+			guarantee "Unsafe controller will maintain constant speed" : Unsafe_Command.Speed = 1;
+		**};
+	end Unsafe_Controller;
+	
+	system implementation Unsafe_Controller.Impl
+	end Unsafe_Controller.Impl;
 	
 	
 	system Switch
@@ -143,14 +140,19 @@ public
 			Safety_Trigger: in event data port Base_Types::Boolean;
 			Control_Command: in event data port Command.Impl;
 			Safe_Command: in event data port Command.Impl;
-			Command: out event data port Command.Impl;
+			Switch_Command: out event data port Command.Impl;
+		properties
+			AAHAA_Properties::Component_Type => SWITCH;
 		annex agree {**
-			guarantee "Safety switch functions correctly" : if Safety_Trigger = false then Command = Control_Command else Command = Safe_Command;
+			guarantee Safety_Switch "Safety switch functions correctly" : if Safety_Trigger = false then Switch_Command = Control_Command else Switch_Command = Safe_Command;
+		**};
+		annex resolute {**
+			-- provably correct synthesis of high-assurance monitor
+			prove (High_Assurance_Switch(this, "Safety_Switch"))
 		**};
 	end Switch;
 	
 	system implementation Switch.Impl
-		
 	end Switch.Impl;
 	
 	
@@ -160,7 +162,8 @@ public
 	end Alert;
 	
 	system implementation Alert.Impl
-		
+		properties
+			AAHAA_Properties::Alert_Type => (PILOT);
 	end Alert.Impl;
 	
 	
@@ -174,45 +177,12 @@ public
 			assume "Aircraft is currently on runway" : IRS_CTE < HALF_RUNWAY_WIDTH;
 			guarantee "Steering command will not cause the aircraft to drive off the runway" : SAFE_COMMAND(IRS_Heading, IRS_CTE, Aircraft_Command);
 		**};
+		
 	end Deep_Taxi;
 	
-	system implementation Deep_Taxi.Impl2
-		subcomponents
---			IRS: system IRS.Impl;
-			CAM: system Camera.Impl;
-			CNN: system Deep_Taxi_CNN.Impl;
-			DSP: system DSP_Smoother.Impl;
---			MON: system Monitor.Impl;
---			CTL: system Controller.Impl;
-			MON_CTL: system Monitored_Controller.Impl;
-			SAFE: system Safety_Controller.Impl;
-			SWITCH: system Switch.Impl;
-			ALERT: system Alert.Impl;
-		connections
-			c1: port IRS_Heading -> MON_CTL.Actual_Heading;
-			c2: port IRS_CTE -> MON_CTL.Actual_CTE;
-			c3: port CAM.Video -> CNN.Video;
-			c4: port CNN.Raw_CTE -> DSP.Raw_CTE;
-			c5: port CNN.Raw_Heading -> DSP.Raw_Heading;
-			c6: port DSP.Smoothed_CTE -> MON_CTL.Estimated_CTE;
-			c7: port DSP.Smoothed_Heading -> MON_CTL.Estimated_Heading;
---			c8: port DSP.Smoothed_CTE -> MON_CTL.CTE;
---			c9: port DSP.Smoothed_Heading -> MON_CTL.Heading;
-			c8: port MON_CTL.Control_Command -> SWITCH.Control_Command;
-			c9: port SAFE.Safe_Command -> SWITCH.Safe_Command;
-			c10: port MON_CTL.Alert -> SWITCH.Safety_Trigger;
-			c11: port MON_CTL.Alert -> ALERT.Alert;
-			c12: port SWITCH.Command -> Aircraft_Command;
-			
-			annex agree {**
-				assert "Monitor condition implies safe CTL command" : MONITOR_CONDITION(IRS_Heading, MON_CTL.Estimated_Heading, IRS_CTE, MON_CTL.Estimated_CTE) => SAFE_COMMAND(IRS_Heading, IRS_CTE, MON_CTL.Control_Command);
-			**};
-		
-	end Deep_Taxi.Impl2;
 	
-	system implementation Deep_Taxi.Impl
+	system implementation Deep_Taxi.Impl 
 		subcomponents
---			CAM: system Camera.Impl;
 			CNN: system Deep_Taxi_CNN.Impl;
 			Smoother: system DSP_Smoother.Impl;
 			Monitor: system Monitor.Impl;
@@ -234,14 +204,56 @@ public
 			c11: port Safety.Safe_Command -> Switch.Safe_Command;
 			c12: port Monitor.Alert -> Switch.Safety_Trigger;
 			c13: port Monitor.Alert -> Alert.Alert;
-			c14: port Switch.Command -> Aircraft_Command;
+			c14: port Switch.Switch_Command -> Aircraft_Command;
 			
 			annex agree {**
 				assert "Controller always outputs positive speed" : Controller.Control_Command.Speed = 1;
 				assert "Monitor condition implies safe CTL command" : MONITOR_CONDITION(IRS_Heading, Monitor.Estimated_Heading, IRS_CTE, Monitor.Estimated_CTE) => SAFE_COMMAND(IRS_Heading, IRS_CTE, Controller.Control_Command);
 			**};
+			
+			annex resolute {**
+				-- Systems containing LECs must have a simplex architecture
+				prove(LEC_Simplex(this))
+			**};
 		
 	end Deep_Taxi.Impl;
+	
+	system implementation Deep_Taxi.Fail
+		subcomponents
+			CNN: system Deep_Taxi_CNN.Impl;
+			Smoother: system DSP_Smoother.Impl;
+			Monitor: system Monitor.Impl;
+			Controller: system Controller.Impl;
+			Unsafe: system Unsafe_Controller.Impl;
+			Switch: system Switch.Impl;
+			Alert: system Alert.Impl;
+		connections
+			c1: port IRS_Heading -> Monitor.Actual_Heading;
+			c2: port IRS_CTE -> Monitor.Actual_CTE;
+			c3: port CAM_Video -> CNN.Video;
+			c4: port CNN.Raw_CTE -> Smoother.Raw_CTE;
+			c5: port CNN.Raw_Heading -> Smoother.Raw_Heading;
+			c6: port Smoother.Smoothed_CTE -> Monitor.Estimated_CTE;
+			c7: port Smoother.Smoothed_Heading -> Monitor.Estimated_Heading;
+			c8: port Smoother.Smoothed_CTE -> Controller.CTE;
+			c9: port Smoother.Smoothed_Heading -> Controller.Heading;
+			c10: port Controller.Control_Command -> SWITCH.Control_Command;
+			c11: port Unsafe.Unsafe_Command -> Switch.Safe_Command;
+			c12: port Monitor.Alert -> Switch.Safety_Trigger;
+			c13: port Monitor.Alert -> Alert.Alert;
+			c14: port Switch.Switch_Command -> Aircraft_Command;
+			
+			annex agree {**
+				assert "Controller always outputs positive speed" : Controller.Control_Command.Speed = 1;
+				assert "Monitor condition implies safe CTL command" : MONITOR_CONDITION(IRS_Heading, Monitor.Estimated_Heading, IRS_CTE, Monitor.Estimated_CTE) => SAFE_COMMAND(IRS_Heading, IRS_CTE, Controller.Control_Command);
+			**};
+			
+			annex resolute {**
+				-- Systems containing LECs must have a simplex architecture
+				prove(LEC_Simplex(this))
+			**};
+		
+	end Deep_Taxi.Fail;
 		
 private
 
@@ -251,6 +263,8 @@ private
 		const ACCEPTABLE_HEADING_ERROR : real = 5.0;
 		const ACCEPTABLE_CTE_ERROR : real = 1.0;
 		
+		-- Determines whether the specified command will result in the aircraft
+		-- remaining on the runway, based on the current heading and CTE
 		fun SAFE_COMMAND(Heading: real, CTE : real, Cmd : Command.Impl) : bool = 
 			if Cmd.Speed = 0 then true
 			else if Heading + Cmd.Heading >= -90.0 and Heading + Cmd.Heading <= 90.0 then
@@ -263,7 +277,7 @@ private
 	
 		fun abs(num : real) : real = 
 			if num >= 0.0 then num
-			else num * -1.0;
+			else -num;
 			
 		fun LINEAR_SIN(theta : real) : real =
 			if theta >= -90.0 and theta < -85.0 then -1.0
@@ -303,6 +317,147 @@ private
 			else if theta > 75.0 and theta <= 80.0 then 0.9848
 			else if theta > 80.0 and theta <= 85.0 then 0.9962
 			else 1.0; --if theta > 85.0 and theta <= 90.0
+	**};
+	
+	annex resolute {**
+		
+		-- The LEC was composed and analyzed properly	
+		LEC_Assurance(c : component) <=
+			** "LEC " c " will not result in unsafe operation" **
+			Test_Input_Prioritization(c) and
+			NN_Formal_Analysis(c) and 
+			Safety_Aware_Constrained_Learning(c)
+		
+		-- Systems containing LECs must have a simplex architecture
+--		LEC_Simplex(c : component) <=
+--			** "Systems containing LECs must have a simplex architecture" **
+--			Contains_LEC() => Is_Simplex_Architecture(c)
+		
+		-- Provably correct synthesis of high-assurance components
+		High_Assurance_Monitor(c : component, prop : string) <=
+			** "Monitor " c " implements property " prop **
+			analysis("ToolCheck", "APT(Monitor, " + prop + ")")
+			
+		High_Assurance_Switch(c : component, prop : string) <=
+			** "Switch " c " implements property " prop **
+			analysis("ToolCheck", "APT(Switch, " + prop + ")")
+			
+		High_Assurance_Controller(c : component, prop : string) <=
+			** "Controller " c " implements property " prop **
+			analysis("ToolCheck", "APT(Controller, " + prop + ")")
+		
+		----------------
+		-- SUB CLAIMS --
+		----------------
+		
+		-- Systems containing LECs must have a simplex architecture
+		LEC_Simplex(c : component) <=
+			** "Systems containing LECs must have a simplex architecture" **
+			Contains_LEC() => Is_Simplex_Architecture(c)
+		
+		-- Determines whether there is an LEC in this model
+		Contains_LEC() : bool =
+			exists (c : component) . (has_property(c, AAHAA_Properties::Component_Type) and 
+										property(c, AAHAA_Properties::Component_Type) = "LEC")
+		
+		-- Determines if the current architecture is a simplex architecture
+		Is_Simplex_Architecture(sys : component) <=
+			** sys " is a simplex architecture" **
+			let simplex_switches : [component] = Get_AAHAA_Components("SWITCH");
+			let simplex_monitors : [component] = Get_AAHAA_Components("MONITOR");
+			let safety_controllers : [component] = Get_AAHAA_Components("SAFETY_CONTROLLER");
+			let controllers : [component] = Get_AAHAA_Components("CONTROLLER");
+			
+			Single_Output_Switch_Exists(sys, simplex_switches) and
+			Switch_Not_Bypassed(head(controllers), head(simplex_switches), sys) and
+			Monitor_Triggers_Switch(simplex_monitors, head(simplex_switches)) and
+			Safety_Controller_On_Switch(head(simplex_switches)) and
+			Agree_Properties_Checked()
+			
+		Agree_Properties_Checked() <=
+			** "AGREE verification passes" **
+			analysis("AgreeCheck")
+
+		-- Returns a list of components with the specified AAHAA::Component_Type property
+		Get_AAHAA_Components(comp_type : string) : [component] =
+			[comp for (comp : component) | (has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = comp_type)]
+		
+		Is_AAHAA_Component_Type(comp : component, comp_type : string) : bool =
+			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = comp_type
+		
+		-- Checks whether a single switch exists that is connected to the system output
+		Single_Output_Switch_Exists(sys : component, switches : [component]) <=
+			** "Single simplex switch exists on output of " sys ** 
+			let out_conns : {connection} = {conn for (conn : connections(sys)) | destination_component(conn) = sys};
+			length(switches) = 1 and forall (conn : out_conns) . source_component(conn) = head(switches)
+
+		-- Checks that the switch is triggered by a high-assurance monitor
+		Monitor_Triggers_Switch(monitors : [component], switch : component) <=
+			** "A high-assurance monitor triggers switch " switch **
+			exists (m : as_set(monitors)) . (exists (conn : connections(m)) . destination_component(conn) = switch)
+
+		-- Checks that a safety controller is connected to the switch
+		Safety_Controller_On_Switch(switch : component) <=
+			** "A safety controller is connected to switch " switch **
+			exists (conn : connections(switch)) . Is_AAHAA_Component_Type(source_component(conn), "SAFETY_CONTROLLER")
+
+		-- Checks that there is no path beteen the complex controller and the aircraft that doesn't pass through the switch
+		Switch_Not_Bypassed(controller : component, switch : component, aircraft : component) <=
+			** "A high-assurance switch cannot be bypassed" **
+			let comps : {component} = reach(controller, switch);
+			--length(comps) = 0 or 
+			(not member(aircraft, reach(controller, switch)))
+
+		Test_Input_Prioritization(c : component) <=
+			** "Test inputs were generated for LEC " c **
+			analysis("ToolCheck", "UofM")
+			
+		NN_Formal_Analysis(c : component) <=
+			** "Closed-loop formal analysis was performed on " c **
+			analysis("ToolCheck", "Marabou")
+			
+		Safety_Aware_Constrained_Learning(c : component) <=
+			** "Open-loop formal analysis was performed on " c **
+			analysis("ToolCheck", "?")
+			
+		reach(c : component, stop_at : component) : {component} =
+			recusive_reach({c}, stop_at)
+
+		recusive_reach(curr: {component}, stop_at : component) : {component} =
+			let next : {component} = union(curr, next_reach(curr, stop_at));
+			if next = curr then curr else recusive_reach(next, stop_at)
+			
+		next_reach(curr : {component}, stop_at : component) : {component} =
+			{y for (x : curr) (y : reachable_components(x, stop_at))}
+			
+		reachable_components(comp : component, stop_at : component) : {component} =
+			{c for (conn : connections(comp)) (c : reachable_components_via_connection(comp, conn, stop_at))}
+		
+		reachable_components_via_connection(comp : component, conn : connection, stop_at : component) : {component} =
+			-- a direct port connection
+			let c : {component} =
+			if is_port_connection(conn) then
+				if source_component(conn) = comp then 
+					{destination_component(conn)} 
+				else {}
+			-- a component reading from 'comp' as a data component via read access on 'conn'
+			else if comp instanceof data then
+				if comp = source(conn) then
+					{destination_component(conn)}
+				else if comp = destination(conn) then
+					{source_component(conn)}
+				else
+					{}
+			-- 'comp' writing to a data component via write access on 'conn'
+			else if destination(conn) instanceof data then
+				{destination_component(conn)}
+			else if source(conn) instanceof data then
+				{source_component(conn)}
+			-- Other connections unsupported at this time
+			else
+				{};
+			if length(c) > 0 and head(as_list(c)) = stop_at then {} else c
+		
 	**};
 	
 end Deep_Taxi;

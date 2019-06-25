@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="0aaeb030-ea9c-42aa-a793-715a562329ee" manual="true">
+    <bo>
+      <seg>classifier</seg>
+      <seg>taxi.impl</seg>
+    </bo>
+    <contentFilters>
+      <filter>features</filter>
+      <filter>internalFeatures</filter>
+      <filter>processorFeatures</filter>
+      <filter>connections</filter>
+      <filter>flowSpecifications</filter>
+      <filter>subcomponents</filter>
+    </contentFilters>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>boeing::taxi.impl</seg>
+    </context>
+  </config>
+</diagram:Diagram>

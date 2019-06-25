@@ -1,0 +1,105 @@
+package boeing
+public
+	with CASE_Properties;
+
+	with CASE_Model_Transformations;
+
+	thread Deep_Taxi_CNN
+		features
+			Video: in event data port;
+			Raw_CTE: out event data port;
+			Raw_Heading: out event data port;
+	end Deep_Taxi_CNN;
+
+	thread implementation Deep_Taxi_CNN.Impl
+	end Deep_Taxi_CNN.Impl;
+
+	thread DSP_Smoother
+		features
+			Raw_CTE: in event data port;
+			Raw_Heading: in event data port;
+			CTE: out event data port;
+			Heading: out event data port;
+	end DSP_Smoother;
+
+	thread implementation DSP_Smoother.Impl
+	end DSP_Smoother.Impl;
+
+	thread Controller
+		features
+			CTE: in event data port;
+			Heading: in event data port;
+			Command: out event data port;
+	end Controller;
+
+	thread implementation Controller.Impl
+	end Controller.Impl;
+
+	process Taxi
+		features
+			IRS_Heading: in event data port;
+			IRS_CTE: in event data port;
+			Video: in event data port;
+			Command: out event data port;
+	end Taxi;
+
+	thread Monitor
+		features
+			Actual_CTE: in event data port;
+			Actual_Heading: in event data port;
+			Estimated_CTE: in event data port;
+			Estimated_Heading: in event data port;
+			Alert: out event data port;
+		properties
+			CASE_Properties::COMP_TYPE => MONITOR;
+	end Monitor;
+
+	thread implementation Monitor.Impl
+	end Monitor.Impl;
+
+	thread Safety_Controller
+		features
+			Safe_Command: out event data port;
+		properties
+			CASE_Properties::COMP_TYPE => SAFETY_CONTROLLER;
+	end Safety_Controller;
+
+	thread implementation Safety_Controller.Impl
+	end Safety_Controller.Impl;
+
+	thread Switch
+		features
+			Safety_Trigger: in event data port;
+			Safe_Command: in event data port;
+			Command: in event data port;
+			Switch_Command: out event data port;
+		properties
+			CASE_Properties::COMP_TYPE => SWITCH;
+	end Switch;
+
+	thread implementation Switch.Impl
+	end Switch.Impl;
+
+	process implementation Taxi.Impl
+		subcomponents
+			LEC: thread Deep_Taxi_CNN.Impl;
+			Smoother: thread DSP_Smoother.Impl;
+			Controller: thread Controller.Impl;
+			Monitor: thread Monitor.Impl;
+			Safety: thread Safety_Controller.Impl;
+			Switch: thread Switch.Impl;
+		connections
+			c1: port Video -> LEC.Video;
+			c2: port LEC.Raw_CTE -> Smoother.Raw_CTE;
+			c3: port LEC.Raw_Heading -> Smoother.Raw_Heading;
+			c4: port Smoother.CTE -> Controller.CTE;
+			c5: port Smoother.Heading -> Controller.Heading;
+			c6: port Smoother.CTE -> Monitor.Estimated_CTE;
+			c7: port Smoother.Heading -> Monitor.Estimated_Heading;
+			c8: port Monitor.Alert -> Switch.Safety_Trigger;
+			c9: port Safety.Safe_Command -> Switch.Safe_Command;
+			c10: port Controller.Command -> Switch.Command;
+			c12: port Switch.Switch_Command -> Command;
+	end Taxi.Impl;
+	
+end boeing;
