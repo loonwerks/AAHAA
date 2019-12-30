@@ -1,0 +1,463 @@
+package TaxiNet
+public
+	with Monitors;
+
+	with Base_Types;
+
+	with AAHAA_Properties;
+
+	thread LEC
+		features
+			Low_Def_Image: in event data port;
+			CTE: out event data port;
+		properties
+			AAHAA_Properties::Component_Type => LEC;
+	end LEC;
+
+	thread implementation LEC.Impl
+	end LEC.Impl;
+
+	thread Monitor_Selector
+		features
+			GPS_Monitor: in event data port Monitors::Status_Message.Impl;
+			CV_Monitor: in event data port Monitors::Status_Message.Impl;
+			IRS_Monitor: in event data port Monitors::Status_Message.Impl;
+			ISSM1: in event data port Base_Types::Integer_32;
+			Monitor_Available: out event data port Base_Types::Boolean;
+			Safe_Now: out event data port Base_Types::Boolean;
+			Safe_At_Tstop_99: out event data port Base_Types::Boolean;
+			Safe_At_Tstop_95: out event data port Base_Types::Boolean;
+		annex agree {**
+			
+		**};
+	end Monitor_Selector;
+
+	thread implementation Monitor_Selector.Impl
+		annex agree {**
+				
+			eq monAvail : bool = true -> pre (GPS_Monitor.Monitor_Available or CV_Monitor.Monitor_Available or IRS_Monitor.Monitor_Available);
+			eq safeNow : bool = if GPS_Monitor.Monitor_Available then GPS_Monitor.Safe_Now else
+								if CV_Monitor.Monitor_Available then CV_Monitor.Safe_Now else
+								if IRS_Monitor.Monitor_Available then IRS_Monitor.Safe_Now else false;
+			eq safeAtTstop99 : bool = if GPS_Monitor.Monitor_Available then GPS_Monitor.Safe_At_Tstop_99 else
+								if CV_Monitor.Monitor_Available then CV_Monitor.Safe_At_Tstop_99 else
+								if IRS_Monitor.Monitor_Available then IRS_Monitor.Safe_At_Tstop_99 else false;
+			eq safeAtTstop95 : bool = if GPS_Monitor.Monitor_Available then GPS_Monitor.Safe_At_Tstop_95 else
+								if CV_Monitor.Monitor_Available then CV_Monitor.Safe_At_Tstop_95 else
+								if IRS_Monitor.Monitor_Available then IRS_Monitor.Safe_At_Tstop_95 else false;
+				
+			assert (Monitor_Available = monAvail);
+			assert (Safe_Now = safeNow);
+			assert (Safe_At_Tstop_99 = safeAtTstop99);
+			assert (Safe_At_Tstop_95 = safeAtTstop95);
+		**};
+	end Monitor_Selector.Impl;
+
+	thread Contingency_Manager
+		features
+			Monitor_Available: in event data port Base_Types::Boolean;
+			Safe_Now: in event data port Base_Types::Boolean;
+			Safe_At_Tstop_99: in event data port Base_Types::Boolean;
+			Safe_At_Tstop_95: in event data port Base_Types::Boolean;
+			LEC_Confidence: in event data port Base_Types::Boolean;
+			Slow: out event data port Base_Types::Boolean;
+			Halt: out event data port Base_Types::Boolean;
+		annex agree {**
+			guarantee "Halt if no monitors are available" : (not Monitor_Available) => Halt;
+			guarantee "Slow if not safe at tstop 95" : (not Safe_At_Tstop_95) => Slow;
+		**};
+	end Contingency_Manager;
+
+	thread implementation Contingency_Manager.Impl
+		annex agree {**
+			
+		**};
+	end Contingency_Manager.Impl;
+
+	process High_Assurance_Components
+		features
+			GPS_Monitor: in event data port Monitors::Status_Message.Impl;
+			CV_Monitor: in event data port Monitors::Status_Message.Impl;
+			IRS_Monitor: in event data port Monitors::Status_Message.Impl;
+			ISSM1: in event data port Base_Types::Integer_32;
+			LEC_Confidence: in event data port Base_Types::Boolean;
+			Slow: out event data port Base_Types::Boolean;
+			Halt: out event data port Base_Types::Boolean;
+		annex agree {**
+			-- HALT will be commanding if no monitors are available
+			property no_mon_avail = false -> pre(not (GPS_Monitor.Monitor_Available or CV_Monitor.Monitor_Available or IRS_Monitor.Monitor_Available));
+			guarantee "HALT" : no_mon_avail => Halt;
+		**};
+	end High_Assurance_Components;
+
+	process implementation High_Assurance_Components.Impl
+		subcomponents
+			Monitor_Selector: thread Monitor_Selector.Impl;
+			Contingency_Manager: thread Contingency_Manager.Impl;
+		connections
+			c1: port GPS_Monitor -> Monitor_Selector.GPS_Monitor;
+			c2: port CV_Monitor -> Monitor_Selector.CV_Monitor;
+			c3: port IRS_Monitor -> Monitor_Selector.IRS_Monitor;
+			c4: port ISSM1 -> Monitor_Selector.ISSM1;
+			c5: port LEC_Confidence -> Contingency_Manager.LEC_Confidence;
+			c6: port Monitor_Selector.Monitor_Available -> Contingency_Manager.Monitor_Available;
+			c7: port Monitor_Selector.Safe_Now -> Contingency_Manager.Safe_Now;
+			c8: port Monitor_Selector.Safe_At_Tstop_99 -> Contingency_Manager.Safe_At_Tstop_99;
+			c9: port Monitor_Selector.Safe_At_Tstop_95 -> Contingency_Manager.Safe_At_Tstop_95;
+			c10: port Contingency_Manager.Slow -> Slow;
+			c11: port Contingency_Manager.Halt -> Halt;
+		annex agree {**
+			assert (GPS_Monitor.Monitor_Available and CV_Monitor.Monitor_Available and IRS_Monitor.Monitor_Available);
+		**};
+	end High_Assurance_Components.Impl;
+
+	thread Autonomous_Executive
+		features
+			Slow: in event data port Base_Types::Boolean;
+			CTE: in event data port;
+			Route_Plan: out event data port;
+	end Autonomous_Executive;
+
+	thread implementation Autonomous_Executive.Impl
+	end Autonomous_Executive.Impl;
+
+	thread Vehicle_Management_System
+		features
+			Route_Plan: in event data port;
+			Halt: in event data port Base_Types::Boolean;
+			Actuation_Command: out event data port Base_Types::Integer;
+		annex agree {**
+			guarantee "Positive Actuation" : Actuation_Command > 0;
+		**};
+	end Vehicle_Management_System;
+
+	thread implementation Vehicle_Management_System.Impl
+		properties
+			AAHAA_Properties::High_Assurance => True;
+	end Vehicle_Management_System.Impl;
+
+	process Boeing_Vehicle_Actuation
+		features
+			Camera: in event data port;
+			Slow: in event data port Base_Types::Boolean;
+			Halt: in event data port Base_Types::Boolean;
+			Actuation_Command: out event data port Base_Types::Integer;
+		annex agree {**
+			guarantee "Positive Actuation" : Actuation_Command > 0;
+		**};
+	end Boeing_Vehicle_Actuation;
+
+	process implementation Boeing_Vehicle_Actuation.Impl
+		subcomponents
+			LEC: thread LEC.Impl;
+			Autonomous_Executive: thread Autonomous_Executive.Impl;
+			Vehicle_Management_System: thread Vehicle_Management_System.Impl;
+		connections
+			c1: port Camera -> LEC.Low_Def_Image;
+			c2: port LEC.CTE -> Autonomous_Executive.CTE;
+			c3: port Autonomous_Executive.Route_Plan -> Vehicle_Management_System.Route_Plan;
+			c4: port Slow -> Autonomous_Executive.Slow;
+			c5: port Halt -> Vehicle_Management_System.Halt;
+			c6: port Vehicle_Management_System.Actuation_Command -> Actuation_Command;
+	end Boeing_Vehicle_Actuation.Impl;
+
+	system Taxi_Net
+		features
+			Camera: in event data port {AAHAA_Properties::Sensor_Type => CAMERA;};
+			GPS: in event data port {AAHAA_Properties::Sensor_Type => GPS;};
+			IRS: in event data port {AAHAA_Properties::Sensor_Type => IRS;};
+			Actuation_Command: out event data port Base_Types::Integer;
+		annex agree {**
+			guarantee "Positive Actuation" : Actuation_Command > 0;
+		**};
+	end Taxi_Net;
+
+	system implementation Taxi_Net.Impl
+		subcomponents
+			Boeing_Vehicle_Actuation: process Boeing_Vehicle_Actuation.Impl;
+			UofM_Monitor: process Monitors::UofM_Monitor.Impl;
+			Collins_Monitors: process Monitors::Collins_Monitors.Impl;
+			Kestrel_Components: process High_Assurance_Components.Impl;
+		connections
+			c1: port Camera -> Boeing_Vehicle_Actuation.Camera;
+			c2: port Camera -> UofM_Monitor.Low_Def_Image;
+			c3: port Camera -> Collins_Monitors.High_Def_Image;
+			c4: port GPS -> Collins_Monitors.GPS_Data;
+			c5: port IRS -> Collins_Monitors.IRS_Data;
+			c6: port UofM_Monitor.LEC_Confidence -> Kestrel_Components.LEC_Confidence;
+			c7: port Collins_Monitors.GPS_Status -> Kestrel_Components.GPS_Monitor;
+			c8: port Collins_Monitors.CV_Status -> Kestrel_Components.CV_Monitor;
+			c9: port Collins_Monitors.IRS_Status -> Kestrel_Components.IRS_Monitor;
+			c10: port Collins_Monitors.ISSM1_Status -> Kestrel_Components.ISSM1;
+			c11: port Kestrel_Components.Slow -> Boeing_Vehicle_Actuation.Slow;
+			c12: port Kestrel_Components.Halt -> Boeing_Vehicle_Actuation.Halt;
+			c13: port Boeing_Vehicle_Actuation.Actuation_Command -> Actuation_Command;
+
+		annex resolute {**
+			-- G25: Runtime monitors detect the error condition and intervene when it occurs
+			prove (G25(this.Collins_Monitors, this.Kestrel_Components.Monitor_Selector, this.Kestrel_Components.Contingency_Manager, this.Boeing_Vehicle_Actuation.Vehicle_Management_System))
+			-- Systems containing LECs must have a simplex architecture
+--			prove(LEC_Simplex(this))
+		**};
+	end Taxi_Net.Impl;
+
+	annex resolute {**
+ 
+ 		-- G25: Runtime monitors detect the error condition and intervene when it occurs
+ 		G25(Collins_Monitors : component, Monitor_Selector : component, Contingency_Manager : component, Vehicle_Management_System : component) <=
+ 			** "Runtime monitors detect the error condition and intervene when it occurs" **
+ 			strategy S7:  "Argue based on simplex architecture"
+ 			G27(Collins_Monitors, Monitor_Selector) and G28(Contingency_Manager, Vehicle_Management_System) and G101()
+ 			
+ 		-- G27: The error condition can be detected when it occurs
+ 		G27(Collins_Monitors : component, Monitor_Selector : component) <=
+ 			** "The error condition can be detected when it occurs" **
+ 			strategy S27: "Reason over multiple monitors"
+			G102(Collins_Monitors) and G103(Monitor_Selector)
+ 			
+ 		G28(Contingency_Manager : component, Vehicle_Management_System : component) <=
+ 			** "When the error condition is detected a recovery mechanism intervenes" **
+ 			strategy S101: "Model-based decomposition"
+ 			G111(Contingency_Manager) and G112() and G113(Vehicle_Management_System)
+ 			
+ 		G101() <=
+ 			** "The architecture is correct" **
+ 			strategy S101: "Model-based decomposition"
+ 			G122() and G123()
+ 			
+ 		G102(Collins_Monitors : component) <=
+ 			** "Monitor availability is maximized" **
+ 			strategy S102: "Reason over monitor diversity"
+ 			G104(Collins_Monitors) and G105(Collins_Monitors) and G106(Collins_Monitors)
+ 			
+ 		G103(Monitor_Selector : component) <=
+ 			** "Monitor selection is correct" **
+ 			strategy S101: "Model-based decomposition"
+ 			G107(Monitor_Selector) and G108(Monitor_Selector)
+ 			
+ 		G104(Collins_Monitors : component) <=
+ 			** "GPS correct when available" **
+ 			-- Evidence that GPS monitor is in model and 
+ 			-- operates on GPS signal
+ 			exists(c : subcomponents(Collins_Monitors)) . (is_monitor(c) and is_sensor_signal(c, "GPS"))
+ 			
+ 		G105(Collins_Monitors : component) <=
+ 			** "CV correct when available" **
+ 			-- Evidence that CV monitor is in model and
+ 			-- operates on image data
+ 			exists(c : subcomponents(Collins_Monitors)) . (is_monitor(c) and is_sensor_signal(c, "CAMERA"))
+ 			
+ 		G106(Collins_Monitors: component) <=
+ 			** "IRS correct when available" **
+ 			-- Evidence that IRS monitor is in model and
+ 			-- operates on IRS signal
+ 			exists(c : subcomponents(Collins_Monitors)) . (is_monitor(c) and is_sensor_signal(c, "IRS"))
+ 			
+ 		G107(Monitor_Selector : component) <=
+ 			** "Monitor with tightest confidence bound is selected" **
+ 			-- Evidence from AGREE?
+ 			verified_by_review()
+ 			
+ 		G108(Monitor_Selector : component) <=
+ 			** "Monitor Selector implementation is correct" **
+ 			strategy S108: "Formal synthesis"
+ 			G109() and G110(Monitor_Selector)
+ 			
+ 		G109() <=
+ 			** "Monitor Selector requirement is satisfied" **
+ 			verified_by_review()
+ 			
+ 		G110(Monitor_Selector : component) <=
+ 			** "APT tool was used to synthesize implementation of " Monitor_Selector **
+ 			analysis("ToolCheck", "APT")
+ 
+ 		G111(Contingency_Manager : component) <=
+ 			** "Contingency mechanism can be trusted" **
+ 			strategy S108: "Formal synthesis"
+ 			G114() and G115(Contingency_Manager)
+ 			
+ 		G112() <=
+ 			** "Contingency mechanism will result in safe aircraft state" **
+ 			strategy S112: "Reason over availability"
+ 			G116() and G117()
+ 			
+ 		G113(VMS : component) <=
+ 			** "VMS is trusted" **
+ 			is_high_assurance(VMS)
+ 			
+ 		G114() <=
+ 			** "Requirement is satisfied" **
+ 			verified_by_review()
+ 			
+ 		G115(Contingency_Manager : component) <=
+ 			** "APT tool was used to synthesize implementation of " Contingency_Manager **
+ 			analysis("ToolCheck", "APT")
+ 			
+ 		G116() <=
+ 			** "Aircraft is stopped on runway when there is no monitor availability" **
+ 			-- Evidence from AGREE
+ 			analysis("AgreeCheck")
+ 			
+ 		G117() <=
+ 			** "Minimize unnecessary stopping when monitor is available" **
+ 			strategy S117: "Reason over error conditions"
+ 			G118() and G119()
+ 			
+ 		G118() <=
+ 			** "Aircraft is not stopped on runway when there is no error condition" **
+ 			strategy S118: "Reason over alternative actions"
+ 			G120() and G121()
+ 			
+ 		G119() <=
+ 			** "Aircraft is stopped on runway when there is an error condition" **
+ 			-- Evidence from AGREE
+ 			analysis("AgreeCheck")
+ 			
+ 		G120() <=
+ 			** "Aircraft will slow speed when error condition becomes more likely" **
+ 			-- Evidence from AGREE
+ 			analysis("AgreeCheck")
+ 			
+ 		G121() <=
+ 			** "Aircraft will recover to normal speed when error condition becomes less likely" **
+ 			-- Evidence from AGREE
+ 			analysis("AgreeCheck")
+ 			
+ 		G122() <=
+ 			** "Requirements are correct" **
+ 			verified_by_review()
+ 			
+ 		G123() <=
+ 			** "Requirements verified in AADL model" **
+ 			verified_by_review()
+ 
+ 		is_monitor(comp : component) : bool = 
+ 			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = "MONITOR"
+ 
+ 		is_sensor_signal(monitor : component, sensor : string) : bool =
+ 			exists (conn : connections(monitor)) . (destination_component(conn) = monitor and has_property(source(conn), AAHAA_Properties::Sensor_Type) and property(source(conn), AAHAA_Properties::Sensor_Type) = sensor)
+ 
+ 		is_high_assurance(comp : component) : bool =
+ 			has_property(comp, AAHAA_Properties::High_Assurance) and property(comp, AAHAA_Properties::High_Assurance)
+ 
+		-- Systems containing LECs must have a simplex architecture
+		LEC_Simplex(c : component) <=
+			** "Systems containing LECs must have a simplex architecture" **
+			Contains_LEC() => Is_Simplex_Architecture(c)
+		
+		-- Determines whether there is an LEC in this model
+		Contains_LEC() : bool =
+			exists (c : component) . (has_property(c, AAHAA_Properties::Component_Type) and 
+												property(c, AAHAA_Properties::Component_Type) = "LEC")
+		
+		-- Determines if the current architecture is a simplex architecture
+		Is_Simplex_Architecture(sys : component) <=
+			** sys " is a simplex architecture" **
+			let simplex_switches : [component] = Get_AAHAA_Components("SWITCH");
+			let simplex_monitors : [component] = Get_AAHAA_Components("MONITOR");
+			let safety_controllers : [component] = Get_AAHAA_Components("SAFETY_CONTROLLER");
+			let controllers : [component] = Get_AAHAA_Components("CONTROLLER");
+			Single_Output_Switch_Exists(sys, simplex_switches) and
+					Switch_Not_Bypassed(head(controllers), head(simplex_switches), sys) and
+					Monitor_Triggers_Switch(simplex_monitors, head(simplex_switches)) and
+					Safety_Controller_On_Switch(head(simplex_switches))
+		
+		-- Returns a list of components with the specified AAHAA::Component_Type property
+		Get_AAHAA_Components(comp_type : string) : [component] =
+			[comp for (comp : component) | (has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = comp_type)]
+		
+		Is_AAHAA_Component_Type(comp : component, comp_type : string) : bool =
+			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = comp_type
+		
+		-- Checks whether a single switch exists that is connected to the system output
+		Single_Output_Switch_Exists(sys : component, switches : [component]) <=
+			** "Single simplex switch exists on output of " sys **
+			let out_conns : {connection} = {conn for (conn : connections(sys)) | destination_component(conn) = sys};
+			length(switches) = 1 and forall (conn : out_conns) . source_component(conn) = head(switches)
+		
+		-- Checks that the switch is triggered by a high-assurance monitor
+		Monitor_Triggers_Switch(monitors : [component], switch : component) <=
+			** "A high-assurance monitor triggers switch " switch **
+			exists (m : as_set(monitors)) . (exists (conn : connections(m)) . destination_component(conn) = switch)
+		
+		-- Checks that a safety controller is connected to the switch
+		Safety_Controller_On_Switch(switch : component) <=
+			** "A safety controller is connected to switch " switch **
+			exists (conn : connections(switch)) . Is_AAHAA_Component_Type(source_component(conn), "SAFETY_CONTROLLER")
+		
+		-- Checks that there is no path beteen the complex controller and the aircraft that doesn't pass through the switch
+		Switch_Not_Bypassed(controller : component, switch : component, aircraft : component) <=
+			** "A high-assurance switch cannot be bypassed" **
+			let comps : {component} = reach(controller, switch);
+			--length(comps) = 0 or 
+			(not member(aircraft, reach(controller, switch)))
+		
+		Test_Input_Prioritization(c : component) <=
+			** "Test inputs were generated for LEC " c **
+			analysis("ToolCheck", "UofM")
+		
+		NN_Formal_Analysis(c : component) <=
+			** "Closed-loop formal analysis was performed on " c **
+			analysis("ToolCheck", "Marabou")
+		
+		Safety_Aware_Constrained_Learning(c : component) <=
+			** "Open-loop formal analysis was performed on " c **
+			analysis("ToolCheck", "?")
+		
+		reach(c : component, stop_at : component) : {component} =
+			recusive_reach({c}, stop_at)
+		
+		recusive_reach(curr: {component}, stop_at : component) : {component} =
+			let next : {component} = union(curr, next_reach(curr, stop_at));
+			if next = curr then
+				curr
+			else
+				recusive_reach(next, stop_at)
+		
+		next_reach(curr : {component}, stop_at : component) : {component} =
+			{y for (x : curr) (y : reachable_components(x, stop_at))}
+		
+		reachable_components(comp : component, stop_at : component) : {component} =
+			{c for (conn : connections(comp)) (c : reachable_components_via_connection(comp, conn, stop_at))}
+		
+		reachable_components_via_connection(comp : component, conn : connection, stop_at : component) : {component} =
+			-- a direct port connection
+			let c : {component} =
+					if is_port_connection(conn) then
+				if source_component(conn) = comp then
+					{destination_component(conn)}
+				else
+					{}
+			-- a component reading from 'comp' as a data component via read access on 'conn'
+			else
+				if comp instanceof data then
+					if comp = source(conn) then
+						{destination_component(conn)}
+					else
+						if comp = destination(conn) then
+							{source_component(conn)}
+						else
+							{}
+				-- 'comp' writing to a data component via write access on 'conn'
+				else
+					if destination(conn) instanceof data then
+						{destination_component(conn)}
+					else
+						if source(conn) instanceof data then
+							{source_component(conn)}
+						-- Other connections unsupported at this time
+						else
+							{};
+			if length(c) > 0 and head(as_list(c)) = stop_at then
+				{}
+			else
+				c
+		
+		verified_by_review() <=
+			** "Verified by review" **
+			true
+			
+		
+	**};
+		
+end TaxiNet;

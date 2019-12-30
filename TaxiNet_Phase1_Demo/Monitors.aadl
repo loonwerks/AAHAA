@@ -1,0 +1,143 @@
+package Monitors
+public
+	with Base_Types;
+	with AAHAA_Properties;
+
+	data Status_Message
+	end Status_Message;
+
+	data implementation Status_Message.Impl
+		subcomponents
+			CTE_Estimate: data Base_Types::Float_32;
+			CTE_High_Confidence_Bound: data Base_Types::Float_32;
+			CTE_1_Sigma_Bound: data Base_Types::Float_32;
+			Monitor_Available: data Base_Types::Boolean;
+			Safe_Now: data Base_Types::Boolean;
+			Safe_At_Tstop_99: data Base_Types::Boolean;
+			Safe_At_Tstop_95: data Base_Types::Boolean;
+	end Status_Message.Impl;
+
+	thread GPS_Monitor
+		features
+			GPS_Data: in event data port;
+			ISSM1_Status: in event data port Base_Types::Integer_32;
+			CV_Reset: in event data port Status_Message.Impl;
+			Status: out event data port Status_Message.Impl;
+		properties
+			AAHAA_Properties::Component_Type => MONITOR;
+	end GPS_Monitor;
+
+	thread implementation GPS_Monitor.Impl
+		annex agree {**
+			assert(Status.Monitor_Available = true);
+--			assert(Status.Monitor_Available = (Status.Safe_Now and Status.Safe_At_Tstop_99 and Status.Safe_At_Tstop_95));
+		**};
+	end GPS_Monitor.Impl;
+
+	thread IRS_Monitor
+		features
+			IRS_Data: in event data port;
+			ISSM1_Status: in event data port Base_Types::Integer_32;
+			GPS_Reset: in event data port Status_Message.Impl;
+			CV_Reset: in event data port Status_Message.Impl;
+			Status: out event data port Status_Message.Impl;
+		properties
+			AAHAA_Properties::Component_Type => MONITOR;
+	end IRS_Monitor;
+
+	thread implementation IRS_Monitor.Impl
+		annex agree {**
+--			assert(Status.Monitor_Available = (Status.Safe_Now and Status.Safe_At_Tstop_99 and Status.Safe_At_Tstop_95));
+			assert(Status.Monitor_Available = true);
+		**};
+	end IRS_Monitor.Impl;
+
+	thread CV_Monitor
+		features
+			High_Def_Image: in event data port;
+			Status: out event data port Status_Message.Impl;
+		properties
+			AAHAA_Properties::Component_Type => MONITOR;
+	end CV_Monitor;
+
+	thread implementation CV_Monitor.Impl
+		annex agree {**
+--			assert(Status.Monitor_Available = (Status.Safe_Now and Status.Safe_At_Tstop_99 and Status.Safe_At_Tstop_95));
+			assert(Status.Monitor_Available = true);
+		**};
+	end CV_Monitor.Impl;
+
+	thread ISS
+		features
+			GPS_Status: in event data port Status_Message.Impl;
+			CV_Status: in event data port Status_Message.Impl;
+			Status: out event data port Base_Types::Integer_32;
+		annex agree {**
+			guarantee "ISS status" : if GPS_Status.CTE_High_Confidence_Bound < CV_Status.CTE_High_Confidence_Bound then Status = 1 else Status = 0;
+		**};
+	end ISS;
+
+	thread implementation ISS.Impl
+	end ISS.Impl;
+
+	process Collins_Monitors
+		features
+			High_Def_Image: in event data port {AAHAA_Properties::Sensor_Type => CAMERA;};
+			GPS_Data: in event data port {AAHAA_Properties::Sensor_Type => GPS;};
+			IRS_Data: in event data port {AAHAA_Properties::Sensor_Type => IRS;};
+			GPS_Status: out event data port Status_Message.Impl;
+			CV_Status: out event data port Status_Message.Impl;
+			IRS_Status: out event data port Status_Message.Impl;
+			ISSM1_Status: out event data port Base_Types::Integer_32;
+	end Collins_Monitors;
+
+	process implementation Collins_Monitors.Impl
+		subcomponents
+			GPS_Monitor: thread GPS_Monitor.Impl;
+			IRS_Monitor: thread IRS_Monitor.Impl;
+			CV_Monitor: thread CV_Monitor.Impl;
+			ISS: thread ISS.Impl;
+		connections
+			c1: port GPS_Data -> GPS_Monitor.GPS_Data;
+			c2: port High_Def_Image -> CV_Monitor.High_Def_Image;
+			c3: port IRS_Data -> IRS_Monitor.IRS_Data;
+			c4: port GPS_Monitor.Status -> GPS_Status;
+			c5: port CV_Monitor.Status -> CV_Status;
+			c6: port IRS_Monitor.Status -> IRS_Status;
+			c7: port GPS_Monitor.Status -> ISS.GPS_Status;
+			c8: port CV_Monitor.Status -> ISS.CV_Status;
+			c9: port ISS.Status -> GPS_Monitor.ISSM1_Status;
+			c10: port ISS.Status -> IRS_Monitor.ISSM1_Status;
+			c11: port ISS.Status -> ISSM1_Status;
+			c12: port CV_Monitor.Status -> GPS_Monitor.CV_Reset;
+			c13: port GPS_Monitor.Status -> IRS_Monitor.GPS_Reset;
+			c14: port CV_Monitor.Status -> IRS_Monitor.CV_Reset;
+	end Collins_Monitors.Impl;
+
+	thread LEC_Monitor
+		features
+			Low_Def_Image: in event data port;
+			LEC_Confidence: out event data port Base_Types::Boolean;
+		properties
+			AAHAA_Properties::Component_Type => MONITOR;
+	end LEC_Monitor;
+
+	thread implementation LEC_Monitor.Impl
+	end LEC_Monitor.Impl;
+
+	process UofM_Monitor
+		features
+			Low_Def_Image: in event data port;
+			LEC_Confidence: out event data port Base_Types::Boolean;
+	end UofM_Monitor;
+
+	process implementation UofM_Monitor.Impl
+		subcomponents
+			LEC_Monitor: thread LEC_Monitor.Impl;
+		connections
+			c1: port Low_Def_Image -> LEC_Monitor.Low_Def_Image;
+			c2: port LEC_Monitor.LEC_Confidence -> LEC_Confidence;
+	end UofM_Monitor.Impl;
+	
+	
+end Monitors;

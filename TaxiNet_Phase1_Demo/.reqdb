@@ -1,0 +1,48 @@
+{
+    "tool": "N/A",
+    "implementation": "N/A",
+    "date": 1571927437960,
+    "hash": "N/A",
+    "requirements": [
+        {
+            "type": "well_formed",
+            "id": "",
+            "text": "The FlightPlanner shall only accept well-formed messages from the GroundStation",
+            "context": "SW::SW.Impl.FPLN",
+            "rationale": "N/A",
+            "date": 12345678,
+            "tool": "DCRYPPS",
+            "status": "ToDo"
+        },
+        {
+            "type": "monitored",
+            "id": "",
+            "text": "The output of Third-party software shall be monitored for correct behavior",
+            "context": "MC::MissionComputer.Impl.PROC_SW",
+            "rationale": "N/A",
+            "date": 12345678,
+            "tool": "DCRYPPS",
+            "status": "ToDo"
+        },
+        {
+            "type": "trusted_source",
+            "id": "",
+            "text": "The FlightPlanner shall only accept messages from a trusted GroundStation",
+            "context": "SW::SW.Impl.FPLN",
+            "rationale": "N/A",
+            "date": 12345678,
+            "tool": "DCRYPPS",
+            "status": "ToDo"
+        },
+        {
+            "type": "isolated",
+            "id": "",
+            "text": "Third-party software shall be isolated from critical components",
+            "context": "MC::MissionComputer.Impl.PROC_SW",
+            "rationale": "N/A",
+            "date": 12345678,
+            "tool": "DCRYPPS",
+            "status": "ToDo"
+        }
+    ]
+}

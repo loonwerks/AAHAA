@@ -1,0 +1,28 @@
+package Sensors
+public
+	
+	device IRS
+		
+	end IRS;
+	
+	device implementation IRS.Impl
+		
+	end IRS.Impl;
+	
+	device GPS
+		
+	end GPS;
+	
+	device implementation GPS.Impl
+		
+	end GPS.Impl;
+	
+	device Camera
+		
+	end Camera;
+	
+	device implementation Camera.Impl
+		
+	end Camera.Impl;
+	
+end Sensors;
