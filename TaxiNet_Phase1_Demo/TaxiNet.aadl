@@ -204,132 +204,145 @@ public
 	annex resolute {**
  
  		-- G25: Runtime monitors detect the error condition and intervene when it occurs
- 		G25(Collins_Monitors : component, Monitor_Selector : component, Contingency_Manager : component, Vehicle_Management_System : component) <=
+ 		goal G25(Collins_Monitors : component, Monitor_Selector : component, Contingency_Manager : component, Vehicle_Management_System : component) <=
  			** "Runtime monitors detect the error condition and intervene when it occurs" **
- 			strategy S7:  "Argue based on simplex architecture"
+ 			S7(Collins_Monitors, Monitor_Selector, Contingency_Manager, Vehicle_Management_System)
+ 		
+ 		strategy S7(Collins_Monitors : component, Monitor_Selector : component, Contingency_Manager : component, Vehicle_Management_System : component) <=
+ 			** "Argue based on simplex architecture" ** 
  			G27(Collins_Monitors, Monitor_Selector) and G28(Contingency_Manager, Vehicle_Management_System) and G101()
- 			
+ 		
  		-- G27: The error condition can be detected when it occurs
- 		G27(Collins_Monitors : component, Monitor_Selector : component) <=
+ 		goal G27(Collins_Monitors : component, Monitor_Selector : component) <=
  			** "The error condition can be detected when it occurs" **
- 			strategy S27: "Reason over multiple monitors"
+			S27(Collins_Monitors, Monitor_Selector)
+			
+		strategy S27(Collins_Monitors : component, Monitor_Selector : component) <=
+			** "Reason over multiple monitors" **
 			G102(Collins_Monitors) and G103(Monitor_Selector)
  			
- 		G28(Contingency_Manager : component, Vehicle_Management_System : component) <=
+ 		goal G28(Contingency_Manager : component, Vehicle_Management_System : component) <=
  			** "When the error condition is detected a recovery mechanism intervenes" **
- 			strategy S101: "Model-based decomposition"
+ 			strategy S101: "Model-based decomposition";
  			G111(Contingency_Manager) and G112() and G113(Vehicle_Management_System)
  			
- 		G101() <=
+ 		goal G101() <=
  			** "The architecture is correct" **
- 			strategy S101: "Model-based decomposition"
+ 			strategy S101a: "Model-based decomposition";
  			G122() and G123()
  			
- 		G102(Collins_Monitors : component) <=
+ 		goal G102(Collins_Monitors : component) <=
  			** "Monitor availability is maximized" **
- 			strategy S102: "Reason over monitor diversity"
+ 			strategy S102: "Reason over monitor diversity";
  			G104(Collins_Monitors) and G105(Collins_Monitors) and G106(Collins_Monitors)
  			
- 		G103(Monitor_Selector : component) <=
+ 		goal G103(Monitor_Selector : component) <=
  			** "Monitor selection is correct" **
- 			strategy S101: "Model-based decomposition"
+ 			strategy S101b: "Model-based decomposition";
  			G107(Monitor_Selector) and G108(Monitor_Selector)
  			
- 		G104(Collins_Monitors : component) <=
+ 		goal G104(Collins_Monitors : component) <=
  			** "GPS correct when available" **
  			-- Evidence that GPS monitor is in model and 
  			-- operates on GPS signal
  			exists(c : subcomponents(Collins_Monitors)) . (is_monitor(c) and is_sensor_signal(c, "GPS"))
  			
- 		G105(Collins_Monitors : component) <=
+ 		goal G105(Collins_Monitors : component) <=
  			** "CV correct when available" **
  			-- Evidence that CV monitor is in model and
  			-- operates on image data
  			exists(c : subcomponents(Collins_Monitors)) . (is_monitor(c) and is_sensor_signal(c, "CAMERA"))
  			
- 		G106(Collins_Monitors: component) <=
+ 		goal G106(Collins_Monitors: component) <=
  			** "IRS correct when available" **
  			-- Evidence that IRS monitor is in model and
  			-- operates on IRS signal
  			exists(c : subcomponents(Collins_Monitors)) . (is_monitor(c) and is_sensor_signal(c, "IRS"))
  			
- 		G107(Monitor_Selector : component) <=
+ 		goal G107(Monitor_Selector : component) <=
  			** "Monitor with tightest confidence bound is selected" **
  			-- Evidence from AGREE?
- 			verified_by_review()
+-- 			verified_by_review()
+			solution Sln107: "Verified by review"
  			
- 		G108(Monitor_Selector : component) <=
+ 		goal G108(Monitor_Selector : component) <=
  			** "Monitor Selector implementation is correct" **
- 			strategy S108: "Formal synthesis"
+ 			strategy S108: "Formal synthesis";
  			G109() and G110(Monitor_Selector)
  			
- 		G109() <=
+ 		goal G109() <=
  			** "Monitor Selector requirement is satisfied" **
- 			verified_by_review()
+-- 			verified_by_review()
+			solution Sln109: "Verified by review"
  			
- 		G110(Monitor_Selector : component) <=
+ 		goal G110(Monitor_Selector : component) <=
  			** "APT tool was used to synthesize implementation of " Monitor_Selector **
- 			analysis("ToolCheck", "APT")
+-- 			analysis("ToolCheck", "APT")
+			true
  
- 		G111(Contingency_Manager : component) <=
+ 		goal G111(Contingency_Manager : component) <=
  			** "Contingency mechanism can be trusted" **
- 			strategy S108: "Formal synthesis"
+ 			strategy S108a: "Formal synthesis";
  			G114() and G115(Contingency_Manager)
  			
- 		G112() <=
+ 		goal G112() <=
  			** "Contingency mechanism will result in safe aircraft state" **
- 			strategy S112: "Reason over availability"
+ 			strategy S112: "Reason over availability";
  			G116() and G117()
  			
- 		G113(VMS : component) <=
+ 		goal G113(VMS : component) <=
  			** "VMS is trusted" **
  			is_high_assurance(VMS)
  			
- 		G114() <=
+ 		goal G114() <=
  			** "Requirement is satisfied" **
- 			verified_by_review()
+-- 			verified_by_review()
+			solution Sln114: "Verified by review"
  			
- 		G115(Contingency_Manager : component) <=
+ 		goal G115(Contingency_Manager : component) <=
  			** "APT tool was used to synthesize implementation of " Contingency_Manager **
- 			analysis("ToolCheck", "APT")
+-- 			analysis("ToolCheck", "APT")
+			true
  			
- 		G116() <=
+ 		goal G116() <=
  			** "Aircraft is stopped on runway when there is no monitor availability" **
  			-- Evidence from AGREE
  			analysis("AgreeCheck")
  			
- 		G117() <=
+ 		goal G117() <=
  			** "Minimize unnecessary stopping when monitor is available" **
- 			strategy S117: "Reason over error conditions"
+ 			strategy S117: "Reason over error conditions";
  			G118() and G119()
  			
- 		G118() <=
+ 		goal G118() <=
  			** "Aircraft is not stopped on runway when there is no error condition" **
- 			strategy S118: "Reason over alternative actions"
+ 			strategy S118: "Reason over alternative actions";
  			G120() and G121()
  			
- 		G119() <=
+ 		goal G119() <=
  			** "Aircraft is stopped on runway when there is an error condition" **
  			-- Evidence from AGREE
  			analysis("AgreeCheck")
  			
- 		G120() <=
+ 		goal G120() <=
  			** "Aircraft will slow speed when error condition becomes more likely" **
  			-- Evidence from AGREE
  			analysis("AgreeCheck")
  			
- 		G121() <=
+ 		goal G121() <=
  			** "Aircraft will recover to normal speed when error condition becomes less likely" **
  			-- Evidence from AGREE
  			analysis("AgreeCheck")
  			
- 		G122() <=
+ 		goal G122() <=
  			** "Requirements are correct" **
- 			verified_by_review()
+-- 			verified_by_review()
+			solution Sln122: "Verified by review"
  			
- 		G123() <=
+ 		goal G123() <=
  			** "Requirements verified in AADL model" **
- 			verified_by_review()
+-- 			verified_by_review()
+			solution Sln123: "Verified by review"
  
  		is_monitor(comp : component) : bool = 
  			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = "MONITOR"
@@ -453,9 +466,9 @@ public
 			else
 				c
 		
-		verified_by_review() <=
-			** "Verified by review" **
-			true
+--		verified_by_review() <=
+--			** "Verified by review" **
+--			true
 			
 		
 	**};
