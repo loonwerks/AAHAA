@@ -196,14 +196,12 @@ public
 		annex resolute {**
 			-- G25: Runtime monitors detect the error condition and intervene when it occurs
 			prove (G25(this.Collins_Monitors, this.Kestrel_Components.Monitor_Selector, this.Kestrel_Components.Contingency_Manager, this.Boeing_Vehicle_Actuation.Vehicle_Management_System))
-			-- Systems containing LECs must have a simplex architecture
---			prove(LEC_Simplex(this))
 		**};
 	end Taxi_Net.Impl;
 
 	annex resolute {**
  
- 		-- G25: Runtime monitors detect the error condition and intervene when it occurs
+ 		-- Top-level claim: Runtime monitors detect the error condition and intervene when it occurs
  		goal G25(Collins_Monitors : component, Monitor_Selector : component, Contingency_Manager : component, Vehicle_Management_System : component) <=
  			** "Runtime monitors detect the error condition and intervene when it occurs" **
  			S7(Collins_Monitors, Monitor_Selector, Contingency_Manager, Vehicle_Management_System)
@@ -212,7 +210,6 @@ public
  			** "Argue based on simplex architecture" ** 
  			G27(Collins_Monitors, Monitor_Selector) and G28(Contingency_Manager, Vehicle_Management_System) and G101()
  		
- 		-- G27: The error condition can be detected when it occurs
  		goal G27(Collins_Monitors : component, Monitor_Selector : component) <=
  			** "The error condition can be detected when it occurs" **
 			S27(Collins_Monitors, Monitor_Selector)
@@ -261,8 +258,6 @@ public
  			
  		goal G107(Monitor_Selector : component) <=
  			** "Monitor with tightest confidence bound is selected" **
- 			-- Evidence from AGREE?
--- 			verified_by_review()
 			solution Sln107: "Verified by review"
  			
  		goal G108(Monitor_Selector : component) <=
@@ -272,13 +267,11 @@ public
  			
  		goal G109() <=
  			** "Monitor Selector requirement is satisfied" **
--- 			verified_by_review()
 			solution Sln109: "Verified by review"
  			
  		goal G110(Monitor_Selector : component) <=
  			** "APT tool was used to synthesize implementation of " Monitor_Selector **
--- 			analysis("ToolCheck", "APT")
-			true
+			solution Sln110: "Component synthesized by APT"
  
  		goal G111(Contingency_Manager : component) <=
  			** "Contingency mechanism can be trusted" **
@@ -296,13 +289,11 @@ public
  			
  		goal G114() <=
  			** "Requirement is satisfied" **
--- 			verified_by_review()
 			solution Sln114: "Verified by review"
  			
  		goal G115(Contingency_Manager : component) <=
  			** "APT tool was used to synthesize implementation of " Contingency_Manager **
--- 			analysis("ToolCheck", "APT")
-			true
+			solution Sln115: "Component synthesized by APT"
  			
  		goal G116() <=
  			** "Aircraft is stopped on runway when there is no monitor availability" **
@@ -336,12 +327,10 @@ public
  			
  		goal G122() <=
  			** "Requirements are correct" **
--- 			verified_by_review()
 			solution Sln122: "Verified by review"
  			
  		goal G123() <=
  			** "Requirements verified in AADL model" **
--- 			verified_by_review()
 			solution Sln123: "Verified by review"
  
  		is_monitor(comp : component) : bool = 
@@ -352,70 +341,6 @@ public
  
  		is_high_assurance(comp : component) : bool =
  			has_property(comp, AAHAA_Properties::High_Assurance) and property(comp, AAHAA_Properties::High_Assurance)
- 
-		-- Systems containing LECs must have a simplex architecture
-		LEC_Simplex(c : component) <=
-			** "Systems containing LECs must have a simplex architecture" **
-			Contains_LEC() => Is_Simplex_Architecture(c)
-		
-		-- Determines whether there is an LEC in this model
-		Contains_LEC() : bool =
-			exists (c : component) . (has_property(c, AAHAA_Properties::Component_Type) and 
-												property(c, AAHAA_Properties::Component_Type) = "LEC")
-		
-		-- Determines if the current architecture is a simplex architecture
-		Is_Simplex_Architecture(sys : component) <=
-			** sys " is a simplex architecture" **
-			let simplex_switches : [component] = Get_AAHAA_Components("SWITCH");
-			let simplex_monitors : [component] = Get_AAHAA_Components("MONITOR");
-			let safety_controllers : [component] = Get_AAHAA_Components("SAFETY_CONTROLLER");
-			let controllers : [component] = Get_AAHAA_Components("CONTROLLER");
-			Single_Output_Switch_Exists(sys, simplex_switches) and
-					Switch_Not_Bypassed(head(controllers), head(simplex_switches), sys) and
-					Monitor_Triggers_Switch(simplex_monitors, head(simplex_switches)) and
-					Safety_Controller_On_Switch(head(simplex_switches))
-		
-		-- Returns a list of components with the specified AAHAA::Component_Type property
-		Get_AAHAA_Components(comp_type : string) : [component] =
-			[comp for (comp : component) | (has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = comp_type)]
-		
-		Is_AAHAA_Component_Type(comp : component, comp_type : string) : bool =
-			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = comp_type
-		
-		-- Checks whether a single switch exists that is connected to the system output
-		Single_Output_Switch_Exists(sys : component, switches : [component]) <=
-			** "Single simplex switch exists on output of " sys **
-			let out_conns : {connection} = {conn for (conn : connections(sys)) | destination_component(conn) = sys};
-			length(switches) = 1 and forall (conn : out_conns) . source_component(conn) = head(switches)
-		
-		-- Checks that the switch is triggered by a high-assurance monitor
-		Monitor_Triggers_Switch(monitors : [component], switch : component) <=
-			** "A high-assurance monitor triggers switch " switch **
-			exists (m : as_set(monitors)) . (exists (conn : connections(m)) . destination_component(conn) = switch)
-		
-		-- Checks that a safety controller is connected to the switch
-		Safety_Controller_On_Switch(switch : component) <=
-			** "A safety controller is connected to switch " switch **
-			exists (conn : connections(switch)) . Is_AAHAA_Component_Type(source_component(conn), "SAFETY_CONTROLLER")
-		
-		-- Checks that there is no path beteen the complex controller and the aircraft that doesn't pass through the switch
-		Switch_Not_Bypassed(controller : component, switch : component, aircraft : component) <=
-			** "A high-assurance switch cannot be bypassed" **
-			let comps : {component} = reach(controller, switch);
-			--length(comps) = 0 or 
-			(not member(aircraft, reach(controller, switch)))
-		
-		Test_Input_Prioritization(c : component) <=
-			** "Test inputs were generated for LEC " c **
-			analysis("ToolCheck", "UofM")
-		
-		NN_Formal_Analysis(c : component) <=
-			** "Closed-loop formal analysis was performed on " c **
-			analysis("ToolCheck", "Marabou")
-		
-		Safety_Aware_Constrained_Learning(c : component) <=
-			** "Open-loop formal analysis was performed on " c **
-			analysis("ToolCheck", "?")
 		
 		reach(c : component, stop_at : component) : {component} =
 			recusive_reach({c}, stop_at)
@@ -464,12 +389,7 @@ public
 			if length(c) > 0 and head(as_list(c)) = stop_at then
 				{}
 			else
-				c
-		
---		verified_by_review() <=
---			** "Verified by review" **
---			true
-			
+				c			
 		
 	**};
 		
