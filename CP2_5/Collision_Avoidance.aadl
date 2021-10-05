@@ -1,0 +1,376 @@
+package Collision_Avoidance
+public
+	with AAHAA_Properties;
+	
+	with Base_Types;
+	
+	data Vehicle_State
+	end Vehicle_State;
+	
+	data implementation Vehicle_State.Impl
+		subcomponents
+			x: data Base_Types::Float;
+			y: data Base_Types::Float;
+			speed: data Base_Types::Float;
+	end Vehicle_State.Impl;
+	
+	data Plan_Assessment
+	end Plan_Assessment;
+	
+	data implementation Plan_Assessment.Impl
+		subcomponents
+			TCPA: data Base_Types::Integer;
+			PMD: data Base_Types::Float;
+			Plan_Safe: data Base_Types::Boolean;
+			Plan_Valid: data Base_Types::Boolean;
+			Plan_Source: data Base_Types::Boolean;
+	end Plan_Assessment.Impl;
+
+	system Collision_Avoidance
+		features
+			ADSB: in event data port Vehicle_State.Impl {AAHAA_Properties::Sensor_Type => ADSB;};
+			STATE: in event data port Vehicle_State.Impl {AAHAA_Properties::Sensor_Type => STATE;};
+			Plan_Manuever: out event data port Vehicle_State.Impl {AAHAA_Properties::Sensor_Type => Plan_Manuever;};
+	end Collision_Avoidance;
+
+	system implementation Collision_Avoidance.Impl
+		subcomponents
+			DAA: process DAA.Impl;
+			LEC: process LEC.Impl;
+			High_Assurance_System: system High_Assurance_System.Impl;
+			Plan_Switch: process Plan_Switch.Impl;
+			AE_Lite: process AE_Lite.Impl;
+		connections
+			c1: port ADSB -> DAA.ADSB;
+			c2: port DAA.BAF_Manuever -> LEC.BAF_Manuever;
+			c3: port DAA.BAF_Manuever -> Plan_Switch.BAF_Manuever;
+			c4: port LEC.LEC_Manuever -> Plan_Switch.LEC_Manuever;
+			c5: port STATE -> LEC.STATE;
+			c6: port STATE -> High_Assurance_System.STATE;
+			c7: port DAA.BAF_Manuever -> High_Assurance_System.BAF_Manuever;
+			c8: port LEC.LEC_Manuever -> High_Assurance_System.LEC_Manuever;
+			c9: port ADSB -> High_Assurance_System.ADSB;
+			c10: port Plan_Switch.Plan_Decision -> AE_Lite.Plan_Decision;
+			c11: port AE_Lite.Plan_Manuever -> Plan_Manuever;
+			c12: port High_Assurance_System.Selected_Plan -> Plan_Switch.Selected_Plan;
+			
+		annex resolute {**
+			prove (G1(this))
+		**};
+	end Collision_Avoidance.Impl;
+	
+	system High_Assurance_System
+		features
+			ADSB: in event data port Vehicle_State.Impl;
+			STATE: in event data port Vehicle_State.Impl;
+			LEC_Manuever: in event data port Vehicle_State.Impl;
+			BAF_Manuever: in event data port Vehicle_State.Impl;
+			Selected_Plan: out event data port Base_Types::Boolean;
+	end High_Assurance_System;
+	
+	system implementation High_Assurance_System.Impl
+		subcomponents
+			Collins_Run_Time_Assurance: process Collins_Run_Time_Assurance.Impl;
+			Kestrel_Logic: process Kestrel_Logic.Impl;
+		connections
+			c1: port Collins_Run_Time_Assurance.Plan_Assessment -> Kestrel_Logic.Plan_Assessment;
+			c2: port Kestrel_Logic.Selected_Plan -> Selected_Plan;
+			c3: port ADSB -> Collins_Run_Time_Assurance.ADSB;
+			c4: port STATE -> Collins_Run_Time_Assurance.STATE;
+			c5: port LEC_Manuever -> Collins_Run_Time_Assurance.LEC_Manuever;
+			c6: port BAF_Manuever -> Collins_Run_Time_Assurance.BAF_Manuever;
+	end High_Assurance_System.Impl;
+	
+	process DAA
+		features
+			ADSB: in event data port Vehicle_State.Impl;
+			BAF_Manuever: out event data port Vehicle_State.Impl;
+	end DAA;
+
+	process implementation DAA.Impl
+		subcomponents
+			Avoidance_Alert: thread Avoidance_Alert.Impl;
+			BAF: thread BAF.Impl;
+		connections
+			c1: port ADSB -> Avoidance_Alert.ADSB;
+			c2: port Avoidance_Alert.Alert -> BAF.Alert;
+			c3: port BAF.BAF_Manuever -> BAF_Manuever;
+	end DAA.Impl;
+	
+	thread Avoidance_Alert
+		features
+			ADSB: in event data port Vehicle_State.Impl;
+			Alert: out event data port Base_Types::Boolean;
+	end Avoidance_Alert;
+	
+	thread implementation Avoidance_Alert.Impl
+	end Avoidance_Alert.Impl;
+	
+	thread BAF
+		features
+			BAF_Manuever: out event data port Vehicle_State.Impl;
+			Alert: in event data port Base_Types::Boolean;
+	end BAF;
+	
+	thread implementation BAF.Impl
+	end BAF.Impl;
+	
+	process Plan_Switch
+		features
+			BAF_Manuever: in event data port Vehicle_State.Impl;
+			LEC_Manuever: in event data port Vehicle_State.Impl;
+			Plan_Decision: out event data port Vehicle_State.Impl;
+			Selected_Plan: in event data port Base_Types::Boolean;
+		properties
+			AAHAA_Properties::Component_Type => Plan_Switch;
+	end Plan_Switch;
+	
+	process implementation Plan_Switch.Impl
+	end Plan_Switch.Impl;
+	
+	process AE_Lite
+		features
+			Plan_Manuever: out event data port Vehicle_State.Impl;
+			Plan_Decision: in event data port Vehicle_State.Impl;
+	end AE_Lite;
+	
+	process implementation AE_Lite.Impl
+	end AE_Lite.Impl;
+	
+	process LEC
+		features
+			STATE: in event data port Vehicle_State.Impl;
+			BAF_Manuever: in event data port Vehicle_State.Impl;
+			LEC_Manuever: out event data port Vehicle_State.Impl;
+	end LEC;
+	
+	process implementation LEC.Impl
+	end LEC.Impl;
+	
+	process Collins_Run_Time_Assurance
+		features
+			ADSB: in event data port Vehicle_State.Impl;
+			BAF_Manuever: in event data port Vehicle_State.Impl;
+			LEC_Manuever: in event data port Vehicle_State.Impl;
+			STATE: in event data port Vehicle_State.Impl;
+			Plan_Assessment: out event data port Plan_Assessment.Impl;
+		properties
+			AAHAA_Properties::Component_Type => Collins_Run_Time_Assurance;
+	end Collins_Run_Time_Assurance;
+
+	process implementation Collins_Run_Time_Assurance.Impl
+		subcomponents
+			Intruder_Trajectory: thread Intruder_Trajectory.Impl;
+			Own_Ship_Trajectory: thread Own_Ship_Trajectory.Impl;
+			SWC_Assessment: thread SWC_Assessment.Impl;
+		connections
+			c1: port ADSB -> Intruder_Trajectory.ADSB;
+			c2: port Intruder_Trajectory.Intruder_Trajectory -> SWC_Assessment.Intruder_Trajectory;
+			c3: port Own_Ship_Trajectory.Own_Ship_Trajectory -> SWC_Assessment.Own_Ship_Trajectory;
+			c4: port STATE -> Own_Ship_Trajectory.STATE;
+			c5: port BAF_Manuever -> Own_Ship_Trajectory.BAF_Manuever;
+			c6: port LEC_Manuever -> Own_Ship_Trajectory.LEC_Manuever;
+			c7: port SWC_Assessment.Plan_Assessment -> Plan_Assessment;
+	end Collins_Run_Time_Assurance.Impl;
+	
+	thread Intruder_Trajectory
+		features
+			ADSB: in event data port Vehicle_State.Impl;
+			Intruder_Trajectory: out event data port Vehicle_State.Impl;
+	end Intruder_Trajectory;
+	
+	thread implementation Intruder_Trajectory.Impl
+	end Intruder_Trajectory.Impl;
+	
+	thread Own_Ship_Trajectory
+		features
+			STATE: in event data port Vehicle_State.Impl;
+			BAF_Manuever: in event data port Vehicle_State.Impl;
+			LEC_Manuever: in event data port Vehicle_State.Impl;
+			Own_Ship_Trajectory: out event data port Vehicle_State.Impl;
+	end Own_Ship_Trajectory;
+	
+	thread implementation Own_Ship_Trajectory.Impl
+	end Own_Ship_Trajectory.Impl;
+	
+	thread SWC_Assessment
+		features
+			Intruder_Trajectory: in event data port Vehicle_State.Impl;
+			Own_Ship_Trajectory: in event data port Vehicle_State.Impl;
+			Plan_Assessment: out event data port Plan_Assessment.Impl;
+	end SWC_Assessment;
+	
+	thread implementation SWC_Assessment.Impl
+	end SWC_Assessment.Impl;
+
+	process Kestrel_Logic
+		features
+			Plan_Assessment: in event data port Plan_Assessment.Impl;
+			Selected_Plan: out event data port Base_Types::Boolean;
+		properties
+			AAHAA_Properties::Component_Type => Kestrel_Logic;
+	end Kestrel_Logic;
+	
+	process implementation Kestrel_Logic.Impl
+		subcomponents
+			Plan_Selector: thread Plan_Selector.Impl;
+		connections
+			c1: port Plan_Assessment -> Plan_Selector.Plan_Assessment;
+			c2: port Plan_Selector.Selected_Plan -> Selected_Plan;
+	end Kestrel_Logic.Impl;
+	
+	thread Plan_Selector
+		features
+			Plan_Assessment: in event data port Plan_Assessment.Impl;
+			Selected_Plan: out event data port Base_Types::Boolean;
+	end Plan_Selector;
+	
+	thread implementation Plan_Selector.Impl
+	end Plan_Selector.Impl;
+	
+	annex resolute {**
+			
+		-- Top-level claim
+ 		goal G1(Collision_Avoidance : component) <=
+ 			** "Collision avoidance monitor ensures a safe flight plan is published" **
+ 			S1(Collision_Avoidance)
+ 		
+ 		strategy S1(Collision_Avoidance : component) <=
+ 			** "Argue based on RTA" **
+ 			G2() and G3() and G4(Collision_Avoidance)
+ 			
+ 		goal G2() <=
+ 			** "Unsafe flight plan can be detected when it occurs" **
+			S2()
+			
+		strategy S2() <=
+			** "Model-based Decomposition" **
+			G5() and G6()
+			
+		goal G5() <=
+ 			** "Implementation is correct" **
+ 			strategy S5: "DO-178C";
+ 			G7()
+ 			
+ 		goal G7() <=
+ 			** "Verified by testing" **
+			solution Sln7: "Component verified by testing"
+			
+		goal G6() <=
+ 			** "Run time monitor requirements are correct" **
+			S6()
+			
+		strategy S6() <=
+			** "Simulation" **
+			G8()
+			
+		goal G8() <=
+ 			** "Verified by Matlab Simulation" **
+			solution Sln8: "Component verified by simulation"
+			
+		goal G16(Collision_Avoidance : component) <=
+ 			** "Run time assurance monitor exists" **
+ 			-- Evidence that run time assurance monitor exists
+ 			exists(c : subcomponents(Collision_Avoidance)) . (is_monitor(c))
+ 		
+ 		goal G4(Collision_Avoidance : component) <=
+ 			** "The architecture is correct" **
+ 			strategy S4: "Model-based decomposition";
+ 			G14() and G15() and G16(Collision_Avoidance) and G17() and G18()
+ 		
+ 		goal G14() <=
+ 			** "Requirements are correct" **
+			solution Sln14: "Verified by review" 
+ 			
+ 		goal G15() <=
+ 			** "Requirements verified in AADL model" **
+			solution Sln15: "Verified by review"
+			
+		goal G17() <=
+ 			** "Flight plan selection mechanism exists" **
+			solution Sln17: "Verified by review"
+			
+		goal G18() <=
+ 			** "Run time assurance monitor and Kestrel logic can not be bypassed" **
+			solution Sln17: "Verified by review"
+--			monitor_not_bypassed()
+			
+		goal G3() <=
+ 			** "Unsafe flight plan is detected and corrective actions are taken" **
+ 			strategy S3: "Model-based decomposition";
+ 			G9() and G10()
+ 			
+ 		goal G9() <=
+ 			** "Flight plan assessment mechanism is implemented correctly" **
+ 			strategy S7: "Formal synthesis";
+ 			G11()
+ 			
+ 		goal G11() <=
+ 			** "APT tool was used to synthesize implementation of" **
+			solution Sln115: "Component synthesized by APT tool"
+		
+		goal G10() <=
+ 			** "Flight plan assessment mechanism will result in safe flight" **
+ 			strategy S8: "Reason over SWC Assessment";
+ 			G12() or G13()
+ 			
+ 		goal G12() <=
+ 			** "Publish LEC flight plan if it is safe " **
+			solution Sln12: "Verified using testing"
+			
+		goal G13() <=
+ 			** "Publish BAF flight plan if it is safe " **
+			solution Sln13: "Verified using testing"
+			
+		is_monitor(comp : component) : bool = 
+ 			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = "Collins_Run_Time_Assurance"
+ 			
+ 		is_kestrel_logic(comp : component) : bool = 
+ 			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = "Kestrel_Logic"
+	
+			-- Make sure there is no communication pathway that avoids the filter
+		monitor_not_bypassed(monitor : component, comp_context : component, msg_type : data) <=
+			** "Monitor " monitor " cannot be bypassed" **
+			let filter_srcs : {component} = get_filter_sources(comp_context, monitor, msg_type); 
+			let non_filter_srcs : {component} = get_non_filter_sources(comp_context, monitor, msg_type); 
+			length(intersect(filter_srcs, non_filter_srcs)) = 0  
+		
+		get_non_filter_sources(target : component, filter : component, msg_type : data) : {component} = 
+			let srcs : {component} = {c for (conn : connections (target)) (c : source_component(conn)) | has_type(conn) and type(conn) = msg_type and not (name(source_component(conn)) = name (filter))}; 
+			recursive_backwards_reach(srcs) 
+		
+		get_filter_sources(target : component, filter : component, msg_type : data) : {component} = 
+			let srcs : {component} = {c for (conn : connections(target)) (c : source_component(conn)) | has_type(conn) and type(conn) = msg_type and name(source_component(conn)) = name(filter)};
+			let b: bool = debug ("sources= ", srcs);
+			let srcs1: {component} = prev_reach(srcs);
+			let c: bool = debug ("sources= ", srcs1); 
+			srcs1
+			
+			
+		
+		recursive_backwards_reach(curr : {component}) : {component} =  
+			let prev : {component} = union(curr, prev_reach(curr)); 
+			if prev = curr then 
+				curr 
+			else  
+				recursive_backwards_reach(prev)
+			
+		
+		prev_reach(curr : {component}) : {component} = 
+			{y for (x : curr) (y : backwards_reachable_components(x))}
+		
+		backwards_reachable_components(comp : component) : {component} = 
+			{c for (conn : connections (comp)) (c : backwards_reachable_components_via_connection(comp, conn))}
+		
+		backwards_reachable_components_via_connection(comp : component, conn : connection) : {component} = 
+			if is_port_connection(conn) then 
+				if destination_component(conn) = comp then 
+					{source_component(conn)} 
+				else 
+					{} 
+			else 
+				{} 
+		
+	**};
+	
+end Collision_Avoidance;

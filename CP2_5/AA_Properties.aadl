@@ -1,0 +1,4 @@
+property set AA_Properties is
+	Component_Type: enumeration (LEC, Landing_Decision_Monitor, Vehicle_Management_System, OR_Block) applies to (system, process, thread, device, abstract);
+	Sensor_Type: enumeration (GPS_INS, ADSB) applies to (connection, feature);
+end AA_Properties;

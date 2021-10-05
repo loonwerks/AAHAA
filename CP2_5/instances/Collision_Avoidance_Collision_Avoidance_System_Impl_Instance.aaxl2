@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" name="Collision_Avoidance_System_Impl_Instance" category="system">
+  <featureInstance name="ADSB" category="eventDataPort">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:NamedValue">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.1"/>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
+    <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.0"/>
+  </featureInstance>
+  <featureInstance name="STATE" category="eventDataPort">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:NamedValue">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
+    <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.1"/>
+  </featureInstance>
+  <featureInstance name="Plan_Manuever" category="eventDataPort" direction="out">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:NamedValue">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.4"/>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.2/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
+    <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.2"/>
+  </featureInstance>
+  <componentInstance name="Collision_Avoidance" category="system">
+    <featureInstance name="ADSB" category="eventDataPort">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="STATE" category="eventDataPort">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="Plan_Manuever" category="eventDataPort" direction="out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.4"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.2/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.2"/>
+    </featureInstance>
+    <componentInstance name="DAA" category="process">
+      <featureInstance name="ADSB" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="BAF_Manuever" category="eventDataPort" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.2"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.1/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.1"/>
+      </featureInstance>
+      <componentInstance name="Avoidance_Alert" category="thread">
+        <featureInstance name="ADSB" category="eventDataPort">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.1"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedEventDataPort.0"/>
+        </featureInstance>
+        <featureInstance name="Alert" category="eventDataPort" direction="out">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#Data_Model.Data_Representation"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="platform:/plugin/org.osate.contribution.sei/resources/packages/Base_Types.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedEventDataPort.1"/>
+        </featureInstance>
+        <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.9/@ownedThreadSubcomponent.0"/>
+        <index>0</index>
+        <classifier xsi:type="aadl2:ThreadImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Avoidance_Alert.Impl"/>
+      </componentInstance>
+      <componentInstance name="BAF" category="thread">
+        <featureInstance name="BAF_Manuever" category="eventDataPort" direction="out">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.2"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.12/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.12/@ownedEventDataPort.0"/>
+        </featureInstance>
+        <featureInstance name="Alert" category="eventDataPort">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#Data_Model.Data_Representation"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="platform:/plugin/org.osate.contribution.sei/resources/packages/Base_Types.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.12/@ownedEventDataPort.1"/>
+        </featureInstance>
+        <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.9/@ownedThreadSubcomponent.1"/>
+        <index>0</index>
+        <classifier xsi:type="aadl2:ThreadImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.BAF.Impl"/>
+      </componentInstance>
+      <connectionInstance name="Avoidance_Alert.Alert -> BAF.Alert" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.0/@componentInstance.1/@featureInstance.1" source="//@componentInstance.0/@componentInstance.0/@componentInstance.0/@featureInstance.1">
+        <connectionReference context="//@componentInstance.0/@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@componentInstance.0/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.0/@componentInstance.1/@featureInstance.1">
+          <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.9/@ownedPortConnection.1"/>
+        </connectionReference>
+      </connectionInstance>
+      <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedProcessSubcomponent.0"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:ProcessImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.DAA.Impl"/>
+    </componentInstance>
+    <componentInstance name="LEC" category="process">
+      <featureInstance name="STATE" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.0"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.18/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.18/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="BAF_Manuever" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.2"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.18/@ownedEventDataPort.1/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.18/@ownedEventDataPort.1"/>
+      </featureInstance>
+      <featureInstance name="LEC_Manuever" category="eventDataPort" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.18/@ownedEventDataPort.2/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.18/@ownedEventDataPort.2"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedProcessSubcomponent.1"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:ProcessImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.LEC.Impl"/>
+    </componentInstance>
+    <componentInstance name="Collins_Run_Time_Assurance" category="process">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Component_Type"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
+      <featureInstance name="ADSB" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="BAF_Manuever" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.2"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.1/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.1"/>
+      </featureInstance>
+      <featureInstance name="LEC_Manuever" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.2/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.2"/>
+      </featureInstance>
+      <featureInstance name="STATE" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.0"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.3/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.3"/>
+      </featureInstance>
+      <featureInstance name="Plan_Assessment" category="eventDataPort" direction="out">
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.4"/>
+      </featureInstance>
+      <componentInstance name="Intruder_Trajectory" category="thread">
+        <featureInstance name="ADSB" category="eventDataPort">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.1"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.22/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.22/@ownedEventDataPort.0"/>
+        </featureInstance>
+        <featureInstance name="Intruder_Trajectory" category="eventDataPort" direction="out">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.5"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.22/@ownedEventDataPort.1/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.22/@ownedEventDataPort.1"/>
+        </featureInstance>
+        <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedThreadSubcomponent.0"/>
+        <index>0</index>
+        <classifier xsi:type="aadl2:ThreadImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Intruder_Trajectory.Impl"/>
+      </componentInstance>
+      <componentInstance name="Own_Ship_Trajectory" category="thread">
+        <featureInstance name="STATE" category="eventDataPort">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.0"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.24/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.24/@ownedEventDataPort.0"/>
+        </featureInstance>
+        <featureInstance name="BAF_Manuever" category="eventDataPort">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.2"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.24/@ownedEventDataPort.1/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.24/@ownedEventDataPort.1"/>
+        </featureInstance>
+        <featureInstance name="LEC_Manuever" category="eventDataPort">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.24/@ownedEventDataPort.2/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.24/@ownedEventDataPort.2"/>
+        </featureInstance>
+        <featureInstance name="Own_Ship_Trajectory" category="eventDataPort" direction="out">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.6"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.24/@ownedEventDataPort.3/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.24/@ownedEventDataPort.3"/>
+        </featureInstance>
+        <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedThreadSubcomponent.1"/>
+        <index>0</index>
+        <classifier xsi:type="aadl2:ThreadImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Own_Ship_Trajectory.Impl"/>
+      </componentInstance>
+      <componentInstance name="SWC_Assessment" category="thread">
+        <featureInstance name="Intruder_Trajectory" category="eventDataPort">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.5"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.26/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.26/@ownedEventDataPort.0"/>
+        </featureInstance>
+        <featureInstance name="Own_Ship_Trajectory" category="eventDataPort">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.6"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.26/@ownedEventDataPort.1/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.26/@ownedEventDataPort.1"/>
+        </featureInstance>
+        <featureInstance name="Plan_Assessment" category="eventDataPort" direction="out">
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.26/@ownedEventDataPort.2"/>
+        </featureInstance>
+        <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedThreadSubcomponent.2"/>
+        <index>0</index>
+        <classifier xsi:type="aadl2:ThreadImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.SWC_Assessment.Impl"/>
+      </componentInstance>
+      <connectionInstance name="Intruder_Trajectory.Intruder_Trajectory -> SWC_Assessment.Intruder_Trajectory" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.2/@featureInstance.0" source="//@componentInstance.0/@componentInstance.2/@componentInstance.0/@featureInstance.1">
+        <connectionReference context="//@componentInstance.0/@componentInstance.2" source="//@componentInstance.0/@componentInstance.2/@componentInstance.0/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.2/@featureInstance.0">
+          <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedPortConnection.1"/>
+        </connectionReference>
+      </connectionInstance>
+      <connectionInstance name="Own_Ship_Trajectory.Own_Ship_Trajectory -> SWC_Assessment.Own_Ship_Trajectory" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.2/@featureInstance.1" source="//@componentInstance.0/@componentInstance.2/@componentInstance.1/@featureInstance.3">
+        <connectionReference context="//@componentInstance.0/@componentInstance.2" source="//@componentInstance.0/@componentInstance.2/@componentInstance.1/@featureInstance.3" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.2/@featureInstance.1">
+          <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedPortConnection.2"/>
+        </connectionReference>
+      </connectionInstance>
+      <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedProcessSubcomponent.2"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:ProcessImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Collins_Run_Time_Assurance.Impl"/>
+    </componentInstance>
+    <componentInstance name="Kestrel_Logic" category="process">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Component_Type"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedLiteral.4"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.28/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
+      <featureInstance name="Plan_Assessment" category="eventDataPort">
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.28/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="Selected_Plan" category="eventDataPort" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#Data_Model.Data_Representation"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="platform:/plugin/org.osate.contribution.sei/resources/packages/Base_Types.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.28/@ownedEventDataPort.1"/>
+      </featureInstance>
+      <componentInstance name="Plan_Selector" category="thread">
+        <featureInstance name="Plan_Assessment" category="eventDataPort">
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.30/@ownedEventDataPort.0"/>
+        </featureInstance>
+        <featureInstance name="Selected_Plan" category="eventDataPort" direction="out">
+          <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+            <property href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#Data_Model.Data_Representation"/>
+            <ownedValue>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+              </ownedValue>
+            </ownedValue>
+            <propertyAssociation href="platform:/plugin/org.osate.contribution.sei/resources/packages/Base_Types.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
+          </ownedPropertyAssociation>
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.30/@ownedEventDataPort.1"/>
+        </featureInstance>
+        <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.29/@ownedThreadSubcomponent.0"/>
+        <index>0</index>
+        <classifier xsi:type="aadl2:ThreadImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Plan_Selector.Impl"/>
+      </componentInstance>
+      <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedProcessSubcomponent.3"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:ProcessImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Kestrel_Logic.Impl"/>
+    </componentInstance>
+    <componentInstance name="Plan_Switch" category="process">
+      <featureInstance name="BAF_Manuever" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.2"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.14/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.14/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="LEC_Manuever" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.14/@ownedEventDataPort.1/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.14/@ownedEventDataPort.1"/>
+      </featureInstance>
+      <featureInstance name="Plan_Decision" category="eventDataPort" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#Data_Model.Data_Representation"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="platform:/plugin/org.osate.contribution.sei/resources/packages/Base_Types.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.14/@ownedEventDataPort.2"/>
+      </featureInstance>
+      <featureInstance name="Selected_Plan" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#Data_Model.Data_Representation"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="platform:/plugin/org.osate.contribution.sei/resources/packages/Base_Types.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.14/@ownedEventDataPort.3"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedProcessSubcomponent.4"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:ProcessImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Plan_Switch.Impl"/>
+    </componentInstance>
+    <componentInstance name="AE_Lite" category="process">
+      <featureInstance name="Plan_Manuever" category="eventDataPort" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.4"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.16/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.16/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="Plan_Decision" category="eventDataPort">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#Data_Model.Data_Representation"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="platform:/plugin/org.osate.contribution.sei/resources/properties/Data_Model.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="platform:/plugin/org.osate.contribution.sei/resources/packages/Base_Types.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.16/@ownedEventDataPort.1"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedProcessSubcomponent.5"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:ProcessImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.AE_Lite.Impl"/>
+    </componentInstance>
+    <connectionInstance name="DAA.BAF.BAF_Manuever -> LEC.BAF_Manuever" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.1/@featureInstance.1" source="//@componentInstance.0/@componentInstance.0/@componentInstance.1/@featureInstance.0">
+      <connectionReference context="//@componentInstance.0/@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@componentInstance.1/@featureInstance.0" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.1">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.9/@ownedPortConnection.2"/>
+      </connectionReference>
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.1/@featureInstance.1">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.1"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="DAA.BAF.BAF_Manuever -> Plan_Switch.BAF_Manuever" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.4/@featureInstance.0" source="//@componentInstance.0/@componentInstance.0/@componentInstance.1/@featureInstance.0">
+      <connectionReference context="//@componentInstance.0/@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@componentInstance.1/@featureInstance.0" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.1">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.9/@ownedPortConnection.2"/>
+      </connectionReference>
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.4/@featureInstance.0">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.2"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="DAA.BAF.BAF_Manuever -> Collins_Run_Time_Assurance.Own_Ship_Trajectory.BAF_Manuever" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.1/@featureInstance.1" source="//@componentInstance.0/@componentInstance.0/@componentInstance.1/@featureInstance.0">
+      <connectionReference context="//@componentInstance.0/@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@componentInstance.1/@featureInstance.0" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.1">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.9/@ownedPortConnection.2"/>
+      </connectionReference>
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.2/@featureInstance.1">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.6"/>
+      </connectionReference>
+      <connectionReference context="//@componentInstance.0/@componentInstance.2" source="//@componentInstance.0/@componentInstance.2/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.1/@featureInstance.1">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedPortConnection.4"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="LEC.LEC_Manuever -> Plan_Switch.LEC_Manuever" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.4/@featureInstance.1" source="//@componentInstance.0/@componentInstance.1/@featureInstance.2">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.1/@featureInstance.2" destination="//@componentInstance.0/@componentInstance.4/@featureInstance.1">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.3"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="LEC.LEC_Manuever -> Collins_Run_Time_Assurance.Own_Ship_Trajectory.LEC_Manuever" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.1/@featureInstance.2" source="//@componentInstance.0/@componentInstance.1/@featureInstance.2">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.1/@featureInstance.2" destination="//@componentInstance.0/@componentInstance.2/@featureInstance.2">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.7"/>
+      </connectionReference>
+      <connectionReference context="//@componentInstance.0/@componentInstance.2" source="//@componentInstance.0/@componentInstance.2/@featureInstance.2" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.1/@featureInstance.2">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedPortConnection.5"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="Collins_Run_Time_Assurance.SWC_Assessment.Plan_Assessment -> Kestrel_Logic.Plan_Selector.Plan_Assessment" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.3/@componentInstance.0/@featureInstance.0" source="//@componentInstance.0/@componentInstance.2/@componentInstance.2/@featureInstance.2">
+      <connectionReference context="//@componentInstance.0/@componentInstance.2" source="//@componentInstance.0/@componentInstance.2/@componentInstance.2/@featureInstance.2" destination="//@componentInstance.0/@componentInstance.2/@featureInstance.4">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedPortConnection.6"/>
+      </connectionReference>
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.2/@featureInstance.4" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.0">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.11"/>
+      </connectionReference>
+      <connectionReference context="//@componentInstance.0/@componentInstance.3" source="//@componentInstance.0/@componentInstance.3/@featureInstance.0" destination="//@componentInstance.0/@componentInstance.3/@componentInstance.0/@featureInstance.0">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.29/@ownedPortConnection.0"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="Kestrel_Logic.Plan_Selector.Selected_Plan -> Plan_Switch.Selected_Plan" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.4/@featureInstance.3" source="//@componentInstance.0/@componentInstance.3/@componentInstance.0/@featureInstance.1">
+      <connectionReference context="//@componentInstance.0/@componentInstance.3" source="//@componentInstance.0/@componentInstance.3/@componentInstance.0/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.1">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.29/@ownedPortConnection.1"/>
+      </connectionReference>
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.3/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.4/@featureInstance.3">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.12"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="Plan_Switch.Plan_Decision -> AE_Lite.Plan_Decision" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.5/@featureInstance.1" source="//@componentInstance.0/@componentInstance.4/@featureInstance.2">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.4/@featureInstance.2" destination="//@componentInstance.0/@componentInstance.5/@featureInstance.1">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.9"/>
+      </connectionReference>
+    </connectionInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedSystemSubcomponent.0"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Collision_Avoidance.Impl"/>
+  </componentInstance>
+  <connectionInstance name="ADSB -> Collision_Avoidance.DAA.Avoidance_Alert.ADSB" kind="portConnection" destination="//@componentInstance.0/@componentInstance.0/@componentInstance.0/@featureInstance.0" source="//@featureInstance.0">
+    <connectionReference context="/" source="//@featureInstance.0" destination="//@componentInstance.0/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedPortConnection.0"/>
+    </connectionReference>
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@featureInstance.0" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.0"/>
+    </connectionReference>
+    <connectionReference context="//@componentInstance.0/@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.0" destination="//@componentInstance.0/@componentInstance.0/@componentInstance.0/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.9/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="ADSB -> Collision_Avoidance.Collins_Run_Time_Assurance.Intruder_Trajectory.ADSB" kind="portConnection" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.0/@featureInstance.0" source="//@featureInstance.0">
+    <connectionReference context="/" source="//@featureInstance.0" destination="//@componentInstance.0/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedPortConnection.0"/>
+    </connectionReference>
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@featureInstance.0" destination="//@componentInstance.0/@componentInstance.2/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.8"/>
+    </connectionReference>
+    <connectionReference context="//@componentInstance.0/@componentInstance.2" source="//@componentInstance.0/@componentInstance.2/@featureInstance.0" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.0/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="STATE -> Collision_Avoidance.LEC.STATE" kind="portConnection" destination="//@componentInstance.0/@componentInstance.1/@featureInstance.0" source="//@featureInstance.1">
+    <connectionReference context="/" source="//@featureInstance.1" destination="//@componentInstance.0/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedPortConnection.1"/>
+    </connectionReference>
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.1/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.4"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="STATE -> Collision_Avoidance.Collins_Run_Time_Assurance.Own_Ship_Trajectory.STATE" kind="portConnection" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.1/@featureInstance.0" source="//@featureInstance.1">
+    <connectionReference context="/" source="//@featureInstance.1" destination="//@componentInstance.0/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedPortConnection.1"/>
+    </connectionReference>
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.2/@featureInstance.3">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.5"/>
+    </connectionReference>
+    <connectionReference context="//@componentInstance.0/@componentInstance.2" source="//@componentInstance.0/@componentInstance.2/@featureInstance.3" destination="//@componentInstance.0/@componentInstance.2/@componentInstance.1/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedPortConnection.3"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="Collision_Avoidance.AE_Lite.Plan_Manuever -> Plan_Manuever" kind="portConnection" destination="//@featureInstance.2" source="//@componentInstance.0/@componentInstance.5/@featureInstance.0">
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.5/@featureInstance.0" destination="//@componentInstance.0/@featureInstance.2">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.10"/>
+    </connectionReference>
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.2" destination="//@featureInstance.2">
+      <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedPortConnection.2"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode name="No Modes"/>
+  <componentImplementation xsi:type="aadl2:SystemImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Collision_Avoidance_System.Impl"/>
+</instance:SystemInstance>

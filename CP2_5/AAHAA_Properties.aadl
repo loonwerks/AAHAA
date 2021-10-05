@@ -1,0 +1,7 @@
+property set AAHAA_Properties is
+	Component_Type: enumeration (LEC, Collision_Avoidance, Collision_Avoidance_Management_System, Collins_Run_Time_Assurance, Kestrel_Logic, Plan_Switch) applies to (system, process, thread, device, abstract);
+	Sensor_Type: enumeration (STATE, ADSB, BAF_Manuever, LEC_Manuever, Plan_Manuever, Intruder_Trajectory, Own_Ship_Trajectory, unknown) applies to (connection, feature);
+--	Alert_Type: list of enumeration (PILOT, AIRCRAFT, LOG) applies to (system, process, thread, device, abstract);
+--	LEC_Location: aadlstring applies to (system, process, thread, device, abstract);
+	High_Assurance: aadlboolean applies to (system, process, thread, device, abstract);
+end AAHAA_Properties;
