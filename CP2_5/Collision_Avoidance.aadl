@@ -28,9 +28,9 @@ public
 
 	system Collision_Avoidance
 		features
-			ADSB: in event data port Vehicle_State.Impl {AAHAA_Properties::Sensor_Type => ADSB;};
-			STATE: in event data port Vehicle_State.Impl {AAHAA_Properties::Sensor_Type => STATE;};
-			Plan_Manuever: out event data port Vehicle_State.Impl {AAHAA_Properties::Sensor_Type => Plan_Manuever;};
+			ADSB: in event data port Vehicle_State.Impl;
+			STATE: in event data port Vehicle_State.Impl;
+			Plan_Manuever: out event data port Vehicle_State.Impl;
 	end Collision_Avoidance;
 
 	system implementation Collision_Avoidance.Impl
@@ -53,9 +53,9 @@ public
 			c10: port Plan_Switch.Plan_Decision -> AE_Lite.Plan_Decision;
 			c11: port AE_Lite.Plan_Manuever -> Plan_Manuever;
 			c12: port High_Assurance_System.Selected_Plan -> Plan_Switch.Selected_Plan;
-			
+--			c13: port LEC.LEC_Manuever -> DAA.LEC_Manuever;
 		annex resolute {**
-			prove (G1(this))
+			prove (G1(this, this.High_Assurance_System, this.Plan_Switch, this.LEC))
 		**};
 	end Collision_Avoidance.Impl;
 	
@@ -66,6 +66,8 @@ public
 			LEC_Manuever: in event data port Vehicle_State.Impl;
 			BAF_Manuever: in event data port Vehicle_State.Impl;
 			Selected_Plan: out event data port Base_Types::Boolean;
+		properties
+			AAHAA_Properties::Component_Type => High_Assurance_System;
 	end High_Assurance_System;
 	
 	system implementation High_Assurance_System.Impl
@@ -85,6 +87,7 @@ public
 		features
 			ADSB: in event data port Vehicle_State.Impl;
 			BAF_Manuever: out event data port Vehicle_State.Impl;
+			LEC_Manuever: in event data port Vehicle_State.Impl;
 	end DAA;
 
 	process implementation DAA.Impl
@@ -120,7 +123,7 @@ public
 			BAF_Manuever: in event data port Vehicle_State.Impl;
 			LEC_Manuever: in event data port Vehicle_State.Impl;
 			Plan_Decision: out event data port Vehicle_State.Impl;
-			Selected_Plan: in event data port Base_Types::Boolean;
+			Selected_Plan: in event data port Base_Types::Boolean {AAHAA_Properties::Control_Port => true;};
 		properties
 			AAHAA_Properties::Component_Type => Plan_Switch;
 	end Plan_Switch;
@@ -153,9 +156,7 @@ public
 			BAF_Manuever: in event data port Vehicle_State.Impl;
 			LEC_Manuever: in event data port Vehicle_State.Impl;
 			STATE: in event data port Vehicle_State.Impl;
-			Plan_Assessment: out event data port Plan_Assessment.Impl;
-		properties
-			AAHAA_Properties::Component_Type => Collins_Run_Time_Assurance;
+			Plan_Assessment: out event data port Plan_Assessment.Impl[2];
 	end Collins_Run_Time_Assurance;
 
 	process implementation Collins_Run_Time_Assurance.Impl
@@ -197,7 +198,7 @@ public
 		features
 			Intruder_Trajectory: in event data port Vehicle_State.Impl;
 			Own_Ship_Trajectory: in event data port Vehicle_State.Impl;
-			Plan_Assessment: out event data port Plan_Assessment.Impl;
+			Plan_Assessment: out event data port Plan_Assessment.Impl[2];
 	end SWC_Assessment;
 	
 	thread implementation SWC_Assessment.Impl
@@ -205,10 +206,8 @@ public
 
 	process Kestrel_Logic
 		features
-			Plan_Assessment: in event data port Plan_Assessment.Impl;
+			Plan_Assessment: in event data port Plan_Assessment.Impl[2];
 			Selected_Plan: out event data port Base_Types::Boolean;
-		properties
-			AAHAA_Properties::Component_Type => Kestrel_Logic;
 	end Kestrel_Logic;
 	
 	process implementation Kestrel_Logic.Impl
@@ -221,7 +220,7 @@ public
 	
 	thread Plan_Selector
 		features
-			Plan_Assessment: in event data port Plan_Assessment.Impl;
+			Plan_Assessment: in event data port Plan_Assessment.Impl[2];
 			Selected_Plan: out event data port Base_Types::Boolean;
 	end Plan_Selector;
 	
@@ -231,13 +230,13 @@ public
 	annex resolute {**
 			
 		-- Top-level claim
- 		goal G1(Collision_Avoidance : component) <=
+ 		goal G1(Collision_Avoidance : component, High_Assurance_System : component, Plan_Switch : component, LEC : component) <=
  			** "Collision avoidance monitor ensures a safe flight plan is published" **
- 			S1(Collision_Avoidance)
+ 			S1(Collision_Avoidance, High_Assurance_System, Plan_Switch, LEC)
  		
- 		strategy S1(Collision_Avoidance : component) <=
+ 		strategy S1(Collision_Avoidance : component, High_Assurance_System : component, Plan_Switch : component, LEC : component) <=
  			** "Argue based on RTA" **
- 			G2() and G3() and G4(Collision_Avoidance)
+ 			G2() and G3() and G4(Collision_Avoidance, High_Assurance_System, Plan_Switch, LEC)
  			
  		goal G2() <=
  			** "Unsafe flight plan can be detected when it occurs" **
@@ -269,14 +268,14 @@ public
 			solution Sln8: "Component verified by simulation"
 			
 		goal G16(Collision_Avoidance : component) <=
- 			** "Run time assurance monitor exists" **
+ 			** "High assurance component exists" **
  			-- Evidence that run time assurance monitor exists
- 			exists(c : subcomponents(Collision_Avoidance)) . (is_monitor(c))
+ 			exists(c : subcomponents(Collision_Avoidance)) . (is_monitor(c)) 
  		
- 		goal G4(Collision_Avoidance : component) <=
+ 		goal G4(Collision_Avoidance : component, High_Assurance_System : component, Plan_Switch : component, LEC : component) <=
  			** "The architecture is correct" **
  			strategy S4: "Model-based decomposition";
- 			G14() and G15() and G16(Collision_Avoidance) and G17() and G18()
+ 			G14() and G15() and G16(Collision_Avoidance) and G17() and G18(High_Assurance_System, Plan_Switch) and G19(High_Assurance_System, Plan_Switch, LEC)
  		
  		goal G14() <=
  			** "Requirements are correct" **
@@ -290,10 +289,13 @@ public
  			** "Flight plan selection mechanism exists" **
 			solution Sln17: "Verified by review"
 			
-		goal G18() <=
- 			** "Run time assurance monitor and Kestrel logic can not be bypassed" **
-			solution Sln17: "Verified by review"
---			monitor_not_bypassed()
+		goal G18(High_Assurance_System : component, Plan_Switch : component) <=
+ 			** "Monitor controls the switch" **
+			exists_monitor_switch_control(High_Assurance_System, Plan_Switch) 
+		
+		goal G19(High_Assurance_System : component, Plan_Switch : component, LEC : component) <=
+ 			** "LEC output is only connected to monitor and switch" **	
+			exists_lec_monitor_connection(High_Assurance_System, LEC) and exists_lec_plan_switch_connection(Plan_Switch, LEC) and not_exists_lec_other_connection(LEC)
 			
 		goal G3() <=
  			** "Unsafe flight plan is detected and corrective actions are taken" **
@@ -323,54 +325,27 @@ public
 			solution Sln13: "Verified using testing"
 			
 		is_monitor(comp : component) : bool = 
- 			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = "Collins_Run_Time_Assurance"
+ 			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = "High_Assurance_System"
  			
- 		is_kestrel_logic(comp : component) : bool = 
- 			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = "Kestrel_Logic"
-	
-			-- Make sure there is no communication pathway that avoids the filter
-		monitor_not_bypassed(monitor : component, comp_context : component, msg_type : data) <=
-			** "Monitor " monitor " cannot be bypassed" **
-			let filter_srcs : {component} = get_filter_sources(comp_context, monitor, msg_type); 
-			let non_filter_srcs : {component} = get_non_filter_sources(comp_context, monitor, msg_type); 
-			length(intersect(filter_srcs, non_filter_srcs)) = 0  
-		
-		get_non_filter_sources(target : component, filter : component, msg_type : data) : {component} = 
-			let srcs : {component} = {c for (conn : connections (target)) (c : source_component(conn)) | has_type(conn) and type(conn) = msg_type and not (name(source_component(conn)) = name (filter))}; 
-			recursive_backwards_reach(srcs) 
-		
-		get_filter_sources(target : component, filter : component, msg_type : data) : {component} = 
-			let srcs : {component} = {c for (conn : connections(target)) (c : source_component(conn)) | has_type(conn) and type(conn) = msg_type and name(source_component(conn)) = name(filter)};
-			let b: bool = debug ("sources= ", srcs);
-			let srcs1: {component} = prev_reach(srcs);
-			let c: bool = debug ("sources= ", srcs1); 
-			srcs1
+		exists_monitor_switch_control(High_Assurance_System : component, Plan_Switch : component) : bool =
+			exists(conn : connections (Plan_Switch)) . (is_source_component(conn, High_Assurance_System) and existsProperty(conn))
 			
+		existsProperty(conn : connection) : bool = 
+			has_property(destination(conn), AAHAA_Properties::Control_Port) and property(destination(conn), AAHAA_Properties::Control_Port)
+		
+		exists_lec_monitor_connection(High_Assurance_System : component, LEC : component) : bool =
+			exists(conn : connections (LEC)) . (is_destination_component(conn, High_Assurance_System))
+--			let srcs : {component} = {c for (conn : connections(LEC)) (c : destination_component(conn)) | name(destination_component(conn)) = name(Plan_Switch)};
+--			let b: bool = debug ("sources= ", srcs);
+--			b  
+		
+		exists_lec_plan_switch_connection(Plan_Switch : component, LEC : component) : bool =
+			exists(conn : connections (LEC)) . (name(destination_component(conn)) = name(Plan_Switch))
 			
-		
-		recursive_backwards_reach(curr : {component}) : {component} =  
-			let prev : {component} = union(curr, prev_reach(curr)); 
-			if prev = curr then 
-				curr 
-			else  
-				recursive_backwards_reach(prev)
+		not_exists_lec_other_connection(LEC : component) : bool =
+			let srcs : {component} = {c for (conn : connections(LEC)) (c : destination_component(conn)) | not (name(destination_component(conn)) = name(LEC))};
+			length(srcs) = 2
 			
-		
-		prev_reach(curr : {component}) : {component} = 
-			{y for (x : curr) (y : backwards_reachable_components(x))}
-		
-		backwards_reachable_components(comp : component) : {component} = 
-			{c for (conn : connections (comp)) (c : backwards_reachable_components_via_connection(comp, conn))}
-		
-		backwards_reachable_components_via_connection(comp : component, conn : connection) : {component} = 
-			if is_port_connection(conn) then 
-				if destination_component(conn) = comp then 
-					{source_component(conn)} 
-				else 
-					{} 
-			else 
-				{} 
-		
 	**};
 	
 end Collision_Avoidance;

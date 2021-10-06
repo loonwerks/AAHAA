@@ -1,39 +1,12 @@
 <?xml version="1.0" encoding="ASCII"?>
 <instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" name="Collision_Avoidance_Impl_Instance" category="system">
   <featureInstance name="ADSB" category="eventDataPort">
-    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-      <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
-      <ownedValue>
-        <ownedValue xsi:type="aadl2:NamedValue">
-          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.1"/>
-        </ownedValue>
-      </ownedValue>
-      <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.0/@ownedPropertyAssociation.0"/>
-    </ownedPropertyAssociation>
     <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.0"/>
   </featureInstance>
   <featureInstance name="STATE" category="eventDataPort">
-    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-      <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
-      <ownedValue>
-        <ownedValue xsi:type="aadl2:NamedValue">
-          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.0"/>
-        </ownedValue>
-      </ownedValue>
-      <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.1/@ownedPropertyAssociation.0"/>
-    </ownedPropertyAssociation>
     <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.1"/>
   </featureInstance>
   <featureInstance name="Plan_Manuever" category="eventDataPort" direction="out">
-    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-      <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Sensor_Type"/>
-      <ownedValue>
-        <ownedValue xsi:type="aadl2:NamedValue">
-          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.1/@ownedPropertyType/@ownedLiteral.4"/>
-        </ownedValue>
-      </ownedValue>
-      <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.2/@ownedPropertyAssociation.0"/>
-    </ownedPropertyAssociation>
     <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.2"/>
   </featureInstance>
   <componentInstance name="DAA" category="process">
@@ -42,6 +15,9 @@
     </featureInstance>
     <featureInstance name="BAF_Manuever" category="eventDataPort" direction="out">
       <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="LEC_Manuever" category="eventDataPort">
+      <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedEventDataPort.2"/>
     </featureInstance>
     <componentInstance name="Avoidance_Alert" category="thread">
       <featureInstance name="ADSB" category="eventDataPort">
@@ -135,6 +111,13 @@
         </ownedValue>
         <propertyAssociation href="platform:/plugin/org.osate.contribution.sei/resources/packages/Base_Types.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
       </ownedPropertyAssociation>
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Control_Port"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:BooleanLiteral" value="true"/>
+        </ownedValue>
+        <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.14/@ownedEventDataPort.3/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.14/@ownedEventDataPort.3"/>
     </featureInstance>
     <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedProcessSubcomponent.2"/>
@@ -153,6 +136,15 @@
     <classifier xsi:type="aadl2:ProcessImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.AE_Lite.Impl"/>
   </componentInstance>
   <componentInstance name="High_Assurance_System" category="system">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Component_Type"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:NamedValue">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedLiteral.6"/>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
     <featureInstance name="ADSB" category="eventDataPort">
       <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.0"/>
     </featureInstance>
@@ -178,15 +170,6 @@
       <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedEventDataPort.4"/>
     </featureInstance>
     <componentInstance name="Collins_Run_Time_Assurance" category="process">
-      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-        <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Component_Type"/>
-        <ownedValue>
-          <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedLiteral.3"/>
-          </ownedValue>
-        </ownedValue>
-        <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedPropertyAssociation.0"/>
-      </ownedPropertyAssociation>
       <featureInstance name="ADSB" category="eventDataPort">
         <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.0"/>
       </featureInstance>
@@ -199,7 +182,10 @@
       <featureInstance name="STATE" category="eventDataPort">
         <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.3"/>
       </featureInstance>
-      <featureInstance name="Plan_Assessment" category="eventDataPort" direction="out">
+      <featureInstance name="Plan_Assessment" category="eventDataPort" direction="out" index="1">
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.4"/>
+      </featureInstance>
+      <featureInstance name="Plan_Assessment" category="eventDataPort" direction="out" index="2">
         <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.20/@ownedEventDataPort.4"/>
       </featureInstance>
       <componentInstance name="Intruder_Trajectory" category="thread">
@@ -237,7 +223,10 @@
         <featureInstance name="Own_Ship_Trajectory" category="eventDataPort">
           <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.26/@ownedEventDataPort.1"/>
         </featureInstance>
-        <featureInstance name="Plan_Assessment" category="eventDataPort" direction="out">
+        <featureInstance name="Plan_Assessment" category="eventDataPort" direction="out" index="1">
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.26/@ownedEventDataPort.2"/>
+        </featureInstance>
+        <featureInstance name="Plan_Assessment" category="eventDataPort" direction="out" index="2">
           <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.26/@ownedEventDataPort.2"/>
         </featureInstance>
         <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedThreadSubcomponent.2"/>
@@ -259,16 +248,10 @@
       <classifier xsi:type="aadl2:ProcessImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Collins_Run_Time_Assurance.Impl"/>
     </componentInstance>
     <componentInstance name="Kestrel_Logic" category="process">
-      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-        <property href="../AAHAA_Properties.aadl#AAHAA_Properties.Component_Type"/>
-        <ownedValue>
-          <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../AAHAA_Properties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedLiteral.4"/>
-          </ownedValue>
-        </ownedValue>
-        <propertyAssociation href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.28/@ownedPropertyAssociation.0"/>
-      </ownedPropertyAssociation>
-      <featureInstance name="Plan_Assessment" category="eventDataPort">
+      <featureInstance name="Plan_Assessment" category="eventDataPort" index="1">
+        <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.28/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="Plan_Assessment" category="eventDataPort" index="2">
         <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.28/@ownedEventDataPort.0"/>
       </featureInstance>
       <featureInstance name="Selected_Plan" category="eventDataPort" direction="out">
@@ -284,7 +267,10 @@
         <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.28/@ownedEventDataPort.1"/>
       </featureInstance>
       <componentInstance name="Plan_Selector" category="thread">
-        <featureInstance name="Plan_Assessment" category="eventDataPort">
+        <featureInstance name="Plan_Assessment" category="eventDataPort" index="1">
+          <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.30/@ownedEventDataPort.0"/>
+        </featureInstance>
+        <featureInstance name="Plan_Assessment" category="eventDataPort" index="2">
           <feature xsi:type="aadl2:EventDataPort" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.30/@ownedEventDataPort.0"/>
         </featureInstance>
         <featureInstance name="Selected_Plan" category="eventDataPort" direction="out">
@@ -307,7 +293,7 @@
       <index>0</index>
       <classifier xsi:type="aadl2:ProcessImplementation" href="../Collision_Avoidance.aadl#Collision_Avoidance.Kestrel_Logic.Impl"/>
     </componentInstance>
-    <connectionInstance name="Collins_Run_Time_Assurance.SWC_Assessment.Plan_Assessment -> Kestrel_Logic.Plan_Selector.Plan_Assessment" complete="true" kind="portConnection" destination="//@componentInstance.4/@componentInstance.1/@componentInstance.0/@featureInstance.0" source="//@componentInstance.4/@componentInstance.0/@componentInstance.2/@featureInstance.2">
+    <connectionInstance name="Collins_Run_Time_Assurance.SWC_Assessment.Plan_Assessment[1] --> Kestrel_Logic.Plan_Selector.Plan_Assessment[1]" complete="true" kind="portConnection" destination="//@componentInstance.4/@componentInstance.1/@componentInstance.0/@featureInstance.0" source="//@componentInstance.4/@componentInstance.0/@componentInstance.2/@featureInstance.2">
       <connectionReference context="//@componentInstance.4/@componentInstance.0" source="//@componentInstance.4/@componentInstance.0/@componentInstance.2/@featureInstance.2" destination="//@componentInstance.4/@componentInstance.0/@featureInstance.4">
         <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedPortConnection.6"/>
       </connectionReference>
@@ -315,6 +301,17 @@
         <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.0"/>
       </connectionReference>
       <connectionReference context="//@componentInstance.4/@componentInstance.1" source="//@componentInstance.4/@componentInstance.1/@featureInstance.0" destination="//@componentInstance.4/@componentInstance.1/@componentInstance.0/@featureInstance.0">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.29/@ownedPortConnection.0"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="Collins_Run_Time_Assurance.SWC_Assessment.Plan_Assessment[2] --> Kestrel_Logic.Plan_Selector.Plan_Assessment[2]" complete="true" kind="portConnection" destination="//@componentInstance.4/@componentInstance.1/@componentInstance.0/@featureInstance.1" source="//@componentInstance.4/@componentInstance.0/@componentInstance.2/@featureInstance.3">
+      <connectionReference context="//@componentInstance.4/@componentInstance.0" source="//@componentInstance.4/@componentInstance.0/@componentInstance.2/@featureInstance.3" destination="//@componentInstance.4/@componentInstance.0/@featureInstance.5">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.21/@ownedPortConnection.6"/>
+      </connectionReference>
+      <connectionReference context="//@componentInstance.4" source="//@componentInstance.4/@componentInstance.0/@featureInstance.5" destination="//@componentInstance.4/@componentInstance.1/@featureInstance.1">
+        <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.0"/>
+      </connectionReference>
+      <connectionReference context="//@componentInstance.4/@componentInstance.1" source="//@componentInstance.4/@componentInstance.1/@featureInstance.1" destination="//@componentInstance.4/@componentInstance.1/@componentInstance.0/@featureInstance.1">
         <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.29/@ownedPortConnection.0"/>
       </connectionReference>
     </connectionInstance>
@@ -413,11 +410,11 @@
       <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedPortConnection.10"/>
     </connectionReference>
   </connectionInstance>
-  <connectionInstance name="High_Assurance_System.Kestrel_Logic.Plan_Selector.Selected_Plan -> Plan_Switch.Selected_Plan" complete="true" kind="portConnection" destination="//@componentInstance.2/@featureInstance.3" source="//@componentInstance.4/@componentInstance.1/@componentInstance.0/@featureInstance.1">
-    <connectionReference context="//@componentInstance.4/@componentInstance.1" source="//@componentInstance.4/@componentInstance.1/@componentInstance.0/@featureInstance.1" destination="//@componentInstance.4/@componentInstance.1/@featureInstance.1">
+  <connectionInstance name="High_Assurance_System.Kestrel_Logic.Plan_Selector.Selected_Plan -> Plan_Switch.Selected_Plan" complete="true" kind="portConnection" destination="//@componentInstance.2/@featureInstance.3" source="//@componentInstance.4/@componentInstance.1/@componentInstance.0/@featureInstance.2">
+    <connectionReference context="//@componentInstance.4/@componentInstance.1" source="//@componentInstance.4/@componentInstance.1/@componentInstance.0/@featureInstance.2" destination="//@componentInstance.4/@componentInstance.1/@featureInstance.2">
       <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.29/@ownedPortConnection.1"/>
     </connectionReference>
-    <connectionReference context="//@componentInstance.4" source="//@componentInstance.4/@componentInstance.1/@featureInstance.1" destination="//@componentInstance.4/@featureInstance.4">
+    <connectionReference context="//@componentInstance.4" source="//@componentInstance.4/@componentInstance.1/@featureInstance.2" destination="//@componentInstance.4/@featureInstance.4">
       <connection xsi:type="aadl2:PortConnection" href="../Collision_Avoidance.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.1"/>
     </connectionReference>
     <connectionReference context="/" source="//@componentInstance.4/@featureInstance.4" destination="//@componentInstance.2/@featureInstance.3">
