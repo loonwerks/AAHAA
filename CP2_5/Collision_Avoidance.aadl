@@ -3,6 +3,27 @@ public
 	with AAHAA_Properties;
 	
 	with Base_Types;
+
+	annex agree {**
+		fun IS_SOURCE_LEC(P: Base_Types::Boolean) : bool = (P = true);
+		fun IS_SOURCE_BAF(P: Base_Types::Boolean) : bool = not IS_SOURCE_LEC(P);
+		uninterpreted CALC_INTRUDER_TRAJECTORY(ADSB: Vehicle_State.Impl) : Vehicle_State.Impl;
+		uninterpreted CALC_TRAJECTORY(S: Vehicle_State.Impl, D: Vehicle_State.Impl, IS_LEC: bool) : Vehicle_State_And_Plan_Source.Impl;
+		uninterpreted ASSESS_TRAJECTORY(Own: Vehicle_State_And_Plan_Source.Impl, Intruder: Vehicle_State.Impl) : Plan_Assessment.Impl;
+		fun CONTAINS_LEC_TRAJECTORY(T: Vehicle_State_And_Plan_Source.Impl[2]) : bool = 
+			exists i in T, (IS_SOURCE_LEC(i.Plan_Source));
+		fun CONTAINS_BAF_TRAJECTORY(T: Vehicle_State_And_Plan_Source.Impl[2]) : bool = 
+			exists i in T, (IS_SOURCE_BAF(i.Plan_Source));
+		fun CONTAINS_LEC_ASSESSMENT(T: Plan_Assessment.Impl[2]) : bool = 
+			exists i in T, (IS_SOURCE_LEC(i.Plan_Source));
+		fun CONTAINS_BAF_ASSESSMENT(T: Plan_Assessment.Impl[2]) : bool = 
+			exists i in T, (IS_SOURCE_BAF(i.Plan_Source));
+		uninterpreted IS_BETTER_MANUEVER(A: Vehicle_State.Impl, B: Vehicle_State.Impl) : bool;
+		uninterpreted IS_BETTER_PLAN_ASSESSMENT(A: Plan_Assessment.Impl, B: Plan_Assessment.Impl) : bool;
+		fun SELECT_PLAN(A: Vehicle_State.Impl, B: Vehicle_State.Impl, S: Base_Types::Boolean) : Vehicle_State.Impl =
+			if S then B else A;		
+	**};
+		
 	
 	data Vehicle_State
 	end Vehicle_State;
@@ -13,6 +34,15 @@ public
 			y: data Base_Types::Float;
 			speed: data Base_Types::Float;
 	end Vehicle_State.Impl;
+	
+	data Vehicle_State_And_Plan_Source
+	end Vehicle_State_And_Plan_Source;
+	
+	data implementation Vehicle_State_And_Plan_Source.Impl
+		subcomponents
+			State: data Vehicle_State.Impl;
+			Plan_Source: data Base_Types::Boolean;
+	end Vehicle_State_And_Plan_Source.Impl;
 	
 	data Plan_Assessment
 	end Plan_Assessment;
@@ -68,6 +98,13 @@ public
 			Selected_Plan: out event data port Base_Types::Boolean;
 		properties
 			AAHAA_Properties::Component_Type => High_Assurance_System;
+			
+		annex agree {**
+			guarantee High_Assurance_System_Selects_Optimal_Plan "High Assurance System selects the better of the BAF and LEC manuevers" :
+				if event(BAF_Manuever) and event(LEC_Manuever) and event(STATE) and event(ADSB)
+					then event(Selected_Plan) and Selected_Plan = IS_BETTER_MANUEVER(LEC_Manuever, BAF_Manuever)
+					else not event(Selected_Plan);
+		**};
 	end High_Assurance_System;
 	
 	system implementation High_Assurance_System.Impl
@@ -81,6 +118,11 @@ public
 			c4: port STATE -> Collins_Run_Time_Assurance.STATE;
 			c5: port LEC_Manuever -> Collins_Run_Time_Assurance.LEC_Manuever;
 			c6: port BAF_Manuever -> Collins_Run_Time_Assurance.BAF_Manuever;
+		annex agree {**
+			lemma LEMMA_MANUEVER "If plan A is better than B, than plan B cannot be better than A" :
+				IS_BETTER_MANUEVER(LEC_Manuever, BAF_Manuever) => not IS_BETTER_MANUEVER(BAF_Manuever, LEC_Manuever) and
+				IS_BETTER_MANUEVER(BAF_Manuever, LEC_Manuever) => not IS_BETTER_MANUEVER(LEC_Manuever, BAF_Manuever);	
+		**};
 	end High_Assurance_System.Impl;
 	
 	process DAA
@@ -126,6 +168,12 @@ public
 			Selected_Plan: in event data port Base_Types::Boolean {AAHAA_Properties::Control_Port => true;};
 		properties
 			AAHAA_Properties::Component_Type => Plan_Switch;
+		annex agree {**
+			guarantee Plan_Switch_Selects_Optimal_Plan "Plan Switch selects the better of the BAF and LEC manuevers based on Kestrel Logic input" : 
+				if event(BAF_Manuever) and event(LEC_Manuever) and event(Selected_Plan)
+					then event(Plan_Decision) and Plan_Decision = SELECT_PLAN(BAF_Manuever, LEC_Manuever, Selected_Plan)
+					else not event(Plan_Decision);
+		**};
 	end Plan_Switch;
 	
 	process implementation Plan_Switch.Impl
@@ -157,6 +205,13 @@ public
 			LEC_Manuever: in event data port Vehicle_State.Impl;
 			STATE: in event data port Vehicle_State.Impl;
 			Plan_Assessment: out event data port Plan_Assessment.Impl[2];
+		annex agree {**
+			guarantee Collins_RTA_Delivers_Plan_Assessments "Collins RTA delivers assessments for the received BAF and LEC manuevers" :
+				if event(BAF_Manuever) and event(LEC_Manuever) and event(STATE) and event(ADSB)
+					then event(Plan_Assessment) and CONTAINS_BAF_ASSESSMENT(Plan_Assessment) and CONTAINS_LEC_ASSESSMENT(Plan_Assessment)
+					else not event(Plan_Assessment);			
+		**};
+		
 	end Collins_Run_Time_Assurance;
 
 	process implementation Collins_Run_Time_Assurance.Impl
@@ -178,6 +233,10 @@ public
 		features
 			ADSB: in event data port Vehicle_State.Impl;
 			Intruder_Trajectory: out event data port Vehicle_State.Impl;
+		annex agree {**
+			guarantee IST_Delivers_Trajectory "IST delivers intruder trajectory for the received ADSB information" :
+				if event(ADSB) then event(Intruder_Trajectory) and Intruder_Trajectory = CALC_INTRUDER_TRAJECTORY(ADSB) else not event(Intruder_Trajectory);
+		**};
 	end Intruder_Trajectory;
 	
 	thread implementation Intruder_Trajectory.Impl
@@ -188,7 +247,13 @@ public
 			STATE: in event data port Vehicle_State.Impl;
 			BAF_Manuever: in event data port Vehicle_State.Impl;
 			LEC_Manuever: in event data port Vehicle_State.Impl;
-			Own_Ship_Trajectory: out event data port Vehicle_State.Impl;
+			Own_Ship_Trajectory: out event data port Vehicle_State_And_Plan_Source.Impl[2];
+		annex agree {**
+			guarantee OST_Delivers_Trajectories "OST delivers trajectories for the received BAF and LEC manuevers" :
+				if event(STATE) and event(BAF_Manuever) and event(LEC_Manuever)
+					then event(Own_Ship_Trajectory) and Own_Ship_Trajectory[1] = CALC_TRAJECTORY(STATE, BAF_Manuever, false) and Own_Ship_Trajectory[2] = CALC_TRAJECTORY(STATE, LEC_Manuever, true)
+					else not event(Own_Ship_Trajectory);
+		**};
 	end Own_Ship_Trajectory;
 	
 	thread implementation Own_Ship_Trajectory.Impl
@@ -197,8 +262,14 @@ public
 	thread SWC_Assessment
 		features
 			Intruder_Trajectory: in event data port Vehicle_State.Impl;
-			Own_Ship_Trajectory: in event data port Vehicle_State.Impl;
+			Own_Ship_Trajectory: in event data port Vehicle_State_And_Plan_Source.Impl[2];
 			Plan_Assessment: out event data port Plan_Assessment.Impl[2];
+		annex agree {**
+			guarantee SWC_Assesment_Delivers_Plan_Assessments "SWC_Assessment delivers assessments for the received BAF and LEC manuevers" :
+				if event(Intruder_Trajectory) and event(Own_Ship_Trajectory)
+					then event(Plan_Assessment) and Plan_Assessment[1] = ASSESS_TRAJECTORY(Own_Ship_Trajectory[1], Intruder_Trajectory) and Plan_Assessment[2] = ASSESS_TRAJECTORY(Own_Ship_Trajectory[2], Intruder_Trajectory)
+					else not event(Plan_Assessment);
+		**};
 	end SWC_Assessment;
 	
 	thread implementation SWC_Assessment.Impl
@@ -208,6 +279,12 @@ public
 		features
 			Plan_Assessment: in event data port Plan_Assessment.Impl[2];
 			Selected_Plan: out event data port Base_Types::Boolean;
+		annex agree {**
+			guarantee Kestrel_Logic_Selects_Optimal_Plan "Kestrel Logic selects the better of the BAF and LEC manuevers" :
+			if event(Plan_Assessment)
+				then event(Selected_Plan) and Selected_Plan = IS_BETTER_PLAN_ASSESSMENT(Plan_Assessment[2], Plan_Assessment[1])
+				else not event(Selected_Plan);
+		**};
 	end Kestrel_Logic;
 	
 	process implementation Kestrel_Logic.Impl
@@ -216,12 +293,23 @@ public
 		connections
 			c1: port Plan_Assessment -> Plan_Selector.Plan_Assessment;
 			c2: port Plan_Selector.Selected_Plan -> Selected_Plan;
+--		annex agree {**
+--			assert if event(Plan_Assessment)
+--				then event(Selected_Plan) and Selected_Plan = IS_BETTER_PLAN_ASSESSMENT(Plan_Assessment[2], Plan_Assessment[1])
+--				else not event(Selected_Plan);
+--		**};
 	end Kestrel_Logic.Impl;
 	
 	thread Plan_Selector
 		features
 			Plan_Assessment: in event data port Plan_Assessment.Impl[2];
 			Selected_Plan: out event data port Base_Types::Boolean;
+		annex agree {**
+			guarantee Plan_Selector_Selects_Optimal_Plan "Plan Selector selects the better of the BAF and LEC manuevers" :
+			if event(Plan_Assessment)
+				then event(Selected_Plan) and Selected_Plan = IS_BETTER_PLAN_ASSESSMENT(Plan_Assessment[2], Plan_Assessment[1])
+				else not event(Selected_Plan);
+		**};
 	end Plan_Selector;
 	
 	thread implementation Plan_Selector.Impl
