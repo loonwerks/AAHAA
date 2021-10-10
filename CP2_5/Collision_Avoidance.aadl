@@ -104,6 +104,8 @@ public
 				if event(BAF_Manuever) and event(LEC_Manuever) and event(STATE) and event(ADSB)
 					then event(Selected_Plan) and Selected_Plan = IS_BETTER_MANUEVER(LEC_Manuever, BAF_Manuever)
 					else not event(Selected_Plan);
+--			guarantee has_guarantee "High Assurance System selects the better of the BAF and LEC manuevers" :
+--				event(Selected_Plan) => Selected_Plan = IS_BETTER_MANUEVER(LEC_Manuever, BAF_Manuever);
 		**};
 	end High_Assurance_System;
 	
@@ -119,9 +121,9 @@ public
 			c5: port LEC_Manuever -> Collins_Run_Time_Assurance.LEC_Manuever;
 			c6: port BAF_Manuever -> Collins_Run_Time_Assurance.BAF_Manuever;
 		annex agree {**
-			lemma LEMMA_MANUEVER "If plan A is better than B, than plan B cannot be better than A" :
-				IS_BETTER_MANUEVER(LEC_Manuever, BAF_Manuever) => not IS_BETTER_MANUEVER(BAF_Manuever, LEC_Manuever) and
-				IS_BETTER_MANUEVER(BAF_Manuever, LEC_Manuever) => not IS_BETTER_MANUEVER(LEC_Manuever, BAF_Manuever);	
+--			lemma LEMMA_MANUEVER "If plan A is better than B, than plan B cannot be better than A" :
+--				IS_BETTER_MANUEVER(LEC_Manuever, BAF_Manuever) => not IS_BETTER_MANUEVER(BAF_Manuever, LEC_Manuever) and
+--				IS_BETTER_MANUEVER(BAF_Manuever, LEC_Manuever) => not IS_BETTER_MANUEVER(LEC_Manuever, BAF_Manuever);	
 		**};
 	end High_Assurance_System.Impl;
 	
