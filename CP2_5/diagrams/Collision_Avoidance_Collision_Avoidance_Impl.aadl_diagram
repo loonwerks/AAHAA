@@ -13,7 +13,7 @@
         <seg>c1</seg>
       </bo>
       <bendpoints>
-        <point x="120.0" y="511.0"/>
+        <point x="32.0" y="410.0"/>
         <point x="120.0" y="411.0"/>
       </bendpoints>
     </element>
@@ -65,8 +65,11 @@
         <seg>c2</seg>
       </bo>
       <bendpoints>
-        <point x="995.0" y="411.0"/>
-        <point x="995.0" y="204.0"/>
+        <point x="788.0" y="408.0"/>
+        <point x="788.0" y="272.0"/>
+        <point x="600.0" y="272.0"/>
+        <point x="113.0" y="272.0"/>
+        <point x="114.0" y="204.0"/>
       </bendpoints>
     </element>
     <element uuid="d05d4b29-5199-4d82-b313-ce4e77fc9d5c" manual="true">
@@ -81,8 +84,11 @@
         <seg>c3</seg>
       </bo>
       <bendpoints>
-        <point x="3874.0" y="411.0"/>
-        <point x="3874.0" y="304.0"/>
+        <point x="792.0" y="408.0"/>
+        <point x="792.0" y="498.0"/>
+        <point x="792.0" y="592.0"/>
+        <point x="2284.0" y="592.0"/>
+        <point x="2285.0" y="432.0"/>
       </bendpoints>
     </element>
     <element uuid="aa5e6db8-a9b0-4225-945b-6776d9590a32" manual="true">
@@ -97,10 +103,10 @@
         <seg>c4</seg>
       </bo>
       <bendpoints>
-        <point x="1321.0" y="179.0"/>
-        <point x="1321.0" y="50.0"/>
-        <point x="3874.0" y="50.0"/>
-        <point x="3874.0" y="204.0"/>
+        <point x="856.0" y="180.0"/>
+        <point x="856.0" y="49.0"/>
+        <point x="2280.0" y="48.0"/>
+        <point x="2280.0" y="332.0"/>
       </bendpoints>
     </element>
     <element uuid="66bd0389-1c86-4c0e-bb9b-f84b1753f76b" manual="true">
@@ -127,10 +133,10 @@
         <seg>c6</seg>
       </bo>
       <bendpoints>
-        <point x="995.0" y="154.0"/>
-        <point x="995.0" y="101.0"/>
-        <point x="1311.0" y="101.0"/>
-        <point x="1311.0" y="229.0"/>
+        <point x="177.0" y="152.0"/>
+        <point x="176.0" y="100.0"/>
+        <point x="788.0" y="100.0"/>
+        <point x="788.0" y="228.0"/>
       </bendpoints>
     </element>
     <element uuid="f2c918a7-4878-4f08-89f4-59920cac70c6" manual="true">
@@ -145,8 +151,8 @@
         <seg>c7</seg>
       </bo>
       <bendpoints>
-        <point x="1311.0" y="411.0"/>
-        <point x="1311.0" y="279.0"/>
+        <point x="789.0" y="408.0"/>
+        <point x="788.0" y="276.0"/>
       </bendpoints>
     </element>
     <element uuid="846191ee-1fde-4ad4-879b-e1b9c23243fa" manual="true">
@@ -173,8 +179,8 @@
         <seg>c9</seg>
       </bo>
       <bendpoints>
-        <point x="1321.0" y="511.0"/>
-        <point x="1321.0" y="359.0"/>
+        <point x="854.0" y="509.0"/>
+        <point x="853.0" y="356.0"/>
       </bendpoints>
     </element>
     <element uuid="2f180ad7-b9e4-4778-a5de-56869774c9d1" manual="true" dockArea="left">
@@ -189,7 +195,7 @@
         <seg>feature</seg>
         <seg>Plan_Manuever</seg>
       </bo>
-      <position x="4603.0" y="210.0"/>
+      <position x="2973.0" y="338.0"/>
     </element>
     <element uuid="9f4deee2-f26c-48da-a63d-1f7a3d083f41" manual="true" dockArea="left">
       <bo>
@@ -211,14 +217,14 @@
           <seg>feature</seg>
           <seg>Plan_Manuever</seg>
         </bo>
-        <position x="216.0" y="10.0"/>
+        <position x="165.0" y="10.0"/>
       </element>
       <bo>
         <seg>subcomponent</seg>
         <seg>AE_Lite</seg>
       </bo>
-      <position x="4250.0" y="200.0"/>
-      <size width="331.0" height="60.0"/>
+      <position x="2688.0" y="328.0"/>
+      <size width="280.0" height="60.0"/>
     </element>
     <element uuid="e950cf83-c0e7-47a2-95ac-05cee0b908d2" manual="true">
       <element uuid="4c9976ef-43b9-43ac-909b-54e4f7de508b" manual="true">
@@ -269,7 +275,7 @@
           <seg>feature</seg>
           <seg>BAF_Manuever</seg>
         </bo>
-        <position x="744.0" y="48.0"/>
+        <position x="569.0" y="48.0"/>
       </element>
       <element uuid="1b3cc86a-6815-4a09-bd90-bc118acc55e4" manual="true" dockArea="left">
         <bo>
@@ -291,14 +297,14 @@
             <seg>feature</seg>
             <seg>Alert</seg>
           </bo>
-          <position x="212.0" y="10.0"/>
+          <position x="172.0" y="2.0"/>
         </element>
         <bo>
           <seg>subcomponent</seg>
           <seg>Avoidance_Alert</seg>
         </bo>
-        <position x="155.0" y="38.0"/>
-        <size width="250.0" height="60.0"/>
+        <position x="70.0" y="38.0"/>
+        <size width="210.0" height="60.0"/>
       </element>
       <element uuid="22a7ca58-57cb-43cb-93fd-8c4dba838a51" manual="true">
         <element uuid="663b4342-0dfb-444a-9680-2d8759dea1af" manual="true" dockArea="left">
@@ -306,28 +312,28 @@
             <seg>feature</seg>
             <seg>Alert</seg>
           </bo>
-          <position y="10.0"/>
+          <position y="3.0"/>
         </element>
         <element uuid="55db7f3e-ced1-4c6e-b2b1-b459021aa8f4" manual="true" dockArea="right">
           <bo>
             <seg>feature</seg>
             <seg>BAF_Manuever</seg>
           </bo>
-          <position x="186.0" y="10.0"/>
+          <position x="140.0" y="10.0"/>
         </element>
         <bo>
           <seg>subcomponent</seg>
           <seg>BAF</seg>
         </bo>
-        <position x="425.0" y="38.0"/>
-        <size width="297.0" height="60.0"/>
+        <position x="340.0" y="37.0"/>
+        <size width="251.0" height="61.0"/>
       </element>
       <bo>
         <seg>subcomponent</seg>
         <seg>DAA</seg>
       </bo>
-      <position x="118.0" y="319.0"/>
-      <size width="855.0" height="170.0"/>
+      <position x="78.0" y="318.0"/>
+      <size width="680.0" height="170.0"/>
     </element>
     <element uuid="e57f8daf-75c6-4878-8e03-0b20581a979f" manual="true">
       <element uuid="00100285-1547-429e-aa8b-1472054d7193" manual="true">
@@ -341,6 +347,12 @@
           <seg>connection</seg>
           <seg>c1</seg>
         </bo>
+        <bendpoints>
+          <point x="2140.0" y="249.0"/>
+          <point x="2140.0" y="436.0"/>
+          <point x="1137.0" y="436.0"/>
+          <point x="1138.0" y="528.0"/>
+        </bendpoints>
       </element>
       <element uuid="29eba5b7-4728-4528-baa5-89e0b42199c7" manual="true">
         <element uuid="6347aab4-62ba-4388-841e-60fbb57bbb91" manual="true">
@@ -353,6 +365,11 @@
           <seg>connection</seg>
           <seg>c2</seg>
         </bo>
+        <bendpoints>
+          <point x="2161.0" y="528.0"/>
+          <point x="2160.0" y="436.0"/>
+          <point x="2160.0" y="376.0"/>
+        </bendpoints>
       </element>
       <element uuid="8f5f6548-950b-49af-8e6a-20a30c1bd64e" manual="true">
         <element uuid="0ccb6ece-949d-4377-91da-9b9068a39263" manual="true">
@@ -428,7 +445,7 @@
           <seg>feature</seg>
           <seg>Selected_Plan</seg>
         </bo>
-        <position x="2425.0" y="161.0"/>
+        <position x="1193.0" y="286.0"/>
       </element>
       <element uuid="83d7c6fa-e419-49dc-96f6-439f3b10fcea" manual="true" dockArea="left">
         <bo>
@@ -462,8 +479,8 @@
             <seg>c2</seg>
           </bo>
           <bendpoints>
-            <point x="2290.0" y="359.0"/>
-            <point x="2290.0" y="279.0"/>
+            <point x="1542.0" y="356.0"/>
+            <point x="1541.0" y="276.0"/>
           </bendpoints>
         </element>
         <element uuid="22d6a0d9-e5e0-44a9-890b-81241486118a" manual="true">
@@ -552,7 +569,7 @@
             <seg>feature</seg>
             <seg>Plan_Assessment</seg>
           </bo>
-          <position x="1229.0" y="123.0"/>
+          <position x="968.0" y="123.0"/>
         </element>
         <element uuid="455e9713-0b2a-4a9b-bc45-b25250862978" manual="true" dockArea="left">
           <bo>
@@ -574,14 +591,14 @@
               <seg>feature</seg>
               <seg>Intruder_Trajectory</seg>
             </bo>
-            <position x="318.0" y="10.0"/>
+            <position x="262.0" y="10.0"/>
           </element>
           <bo>
             <seg>subcomponent</seg>
             <seg>Intruder_Trajectory</seg>
           </bo>
-          <position x="247.0" y="218.0"/>
-          <size width="456.0" height="60.0"/>
+          <position x="90.0" y="218.0"/>
+          <size width="400.0" height="60.0"/>
         </element>
         <element uuid="276b03e5-7f9d-480f-a46f-1a6ef756b94c" manual="true">
           <element uuid="81292b59-bfad-45ee-9029-dc37f19649ad" manual="true" dockArea="left">
@@ -603,7 +620,7 @@
               <seg>feature</seg>
               <seg>Own_Ship_Trajectory</seg>
             </bo>
-            <position x="348.0" y="60.0"/>
+            <position x="202.0" y="60.0"/>
           </element>
           <element uuid="b94abda1-9628-4708-8246-ee99f8ae456b" manual="true" dockArea="left">
             <bo>
@@ -616,8 +633,8 @@
             <seg>subcomponent</seg>
             <seg>Own_Ship_Trajectory</seg>
           </bo>
-          <position x="224.0" y="38.0"/>
-          <size width="501.0" height="160.0"/>
+          <position x="126.0" y="37.0"/>
+          <size width="355.0" height="160.0"/>
         </element>
         <element uuid="51f04b32-ce86-4c3c-90a7-5d3c8cd26964" manual="true">
           <element uuid="bbcb6412-2e7f-41e8-85c2-2d30dd77f318" manual="true" dockArea="left">
@@ -639,21 +656,21 @@
               <seg>feature</seg>
               <seg>Plan_Assessment</seg>
             </bo>
-            <position x="335.0" y="35.0"/>
+            <position x="300.0" y="35.0"/>
           </element>
           <bo>
             <seg>subcomponent</seg>
             <seg>SWC_Assessment</seg>
           </bo>
-          <position x="745.0" y="88.0"/>
-          <size width="477.0" height="110.0"/>
+          <position x="530.0" y="88.0"/>
+          <size width="442.0" height="110.0"/>
         </element>
         <bo>
           <seg>subcomponent</seg>
           <seg>Collins_Run_Time_Assurance</seg>
         </bo>
-        <position x="224.0" y="38.0"/>
-        <size width="1371.0" height="290.0"/>
+        <position x="120.0" y="36.0"/>
+        <size width="1110.0" height="290.0"/>
       </element>
       <element uuid="19341721-ae83-4910-8315-3fc6e66876c6" manual="true">
         <element uuid="df81a56c-5d7a-48c3-b4f8-56dfe3b9c2e1" manual="true">
@@ -720,15 +737,15 @@
           <seg>subcomponent</seg>
           <seg>Kestrel_Logic</seg>
         </bo>
-        <position x="1615.0" y="113.0"/>
+        <position x="260.0" y="390.0"/>
         <size width="788.0" height="110.0"/>
       </element>
       <bo>
         <seg>subcomponent</seg>
         <seg>High_Assurance_System</seg>
       </bo>
-      <position x="1319.0" y="49.0"/>
-      <size width="2533.0" height="340.0"/>
+      <position x="898.0" y="48.0"/>
+      <size width="1301.0" height="520.0"/>
     </element>
     <element uuid="30382c8f-8cad-4b29-a574-76a9195c42ed" manual="true">
       <element uuid="b8068e55-59af-49e2-a928-2732e33becb2" manual="true" dockArea="left">
@@ -756,7 +773,7 @@
         <seg>subcomponent</seg>
         <seg>LEC</seg>
       </bo>
-      <position x="993.0" y="100.0"/>
+      <position x="208.0" y="101.0"/>
       <size width="296.0" height="110.0"/>
     </element>
     <element uuid="a861e4b3-6094-4e5c-86f9-d7838ed90689" manual="true">
@@ -779,28 +796,28 @@
           <seg>feature</seg>
           <seg>Plan_Decision</seg>
         </bo>
-        <position x="252.0" y="60.0"/>
+        <position x="204.0" y="60.0"/>
       </element>
       <element uuid="a2e47452-b412-4e8c-9de1-73e6919292f3" manual="true" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>Selected_Plan</seg>
         </bo>
-        <position y="60.0"/>
+        <position y="55.0"/>
       </element>
       <bo>
         <seg>subcomponent</seg>
         <seg>Plan_Switch</seg>
       </bo>
-      <position x="3872.0" y="150.0"/>
-      <size width="358.0" height="160.0"/>
+      <position x="2338.0" y="278.0"/>
+      <size width="310.0" height="160.0"/>
     </element>
     <bo>
       <seg>classifier</seg>
       <seg>Collision_Avoidance.Impl</seg>
     </bo>
     <position x="12.0" y="12.0"/>
-    <size width="4718.0" height="519.0"/>
+    <size width="3088.0" height="608.0"/>
   </element>
   <config type="structure" connectionPrimaryLabelsVisible="false">
     <enabledAadlProperties/>

@@ -365,15 +365,16 @@ public
  		goal G4(Collision_Avoidance : component, High_Assurance_System : component, Plan_Switch : component, LEC : component) <=
  			** "The architecture is correct" **
  			strategy S4: "Model-based decomposition";
- 			G14() and G15() and G16(Collision_Avoidance) and G17() and G18(High_Assurance_System, Plan_Switch) and G19(High_Assurance_System, Plan_Switch, LEC)
+ 			G14() and G15(Collision_Avoidance) and G16(Collision_Avoidance) and G17() and G18(High_Assurance_System, Plan_Switch) and G19(High_Assurance_System, Plan_Switch, LEC)
  		
  		goal G14() <=
  			** "Requirements are correct" **
 			solution Sln14: "Verified by review" 
  			
- 		goal G15() <=
- 			** "Requirements verified in AADL model" **
+ 		goal G15(Collision_Avoidance : component) <=
+ 			** "Requirements verified in AADL model with AGREE" **
 			solution Sln15: "Verified by review"
+--			analysis("AgreeCheck", type(parent(Collision_Avoidance)))
 			
 		goal G17() <=
  			** "Flight plan selection mechanism exists" **
@@ -403,16 +404,16 @@ public
 		
 		goal G10() <=
  			** "Flight plan assessment mechanism will result in safe flight" **
- 			strategy S8: "Reason over SWC Assessment";
- 			G12() or G13()
+ 			strategy S8: "Reason over SWC Assessment and Kestrel Logic";
+ 			G12()
  			
  		goal G12() <=
- 			** "Publish LEC flight plan if it is safe " **
+ 			** "Publish a safe flight plan (LEC or BAF)" **
 			solution Sln12: "Verified using testing"
 			
-		goal G13() <=
- 			** "Publish BAF flight plan if it is safe " **
-			solution Sln13: "Verified using testing"
+--		goal G13() <=
+-- 			** "Publish BAF flight plan if it is safe " **
+--			solution Sln13: "Verified using testing"
 			
 		is_monitor(comp : component) : bool = 
  			has_property(comp, AAHAA_Properties::Component_Type) and property(comp, AAHAA_Properties::Component_Type) = "High_Assurance_System"
